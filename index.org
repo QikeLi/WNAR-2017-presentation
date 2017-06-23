@@ -2,20 +2,20 @@
 #+OPTIONS: reveal_center:nil reveal_control:t reveal_height:-1
 #+OPTIONS: reveal_history:nil reveal_keyboard:t reveal_overview:t
 #+OPTIONS: reveal_progress:t reveal_rolling_links:nil
-#+OPTIONS: reveal_single_file:nil reveal_slide_number:"c"
+#+OPTIONS: reveal_single_file:t reveal_slide_number:"c"
 #+OPTIONS: num:nil 
 #+OPTIONS: toc:nil
 #+OPTIONS: reveal_title_slide:nil reveal_width:-1
 #+REVEAL_MARGIN: -1
 #+REVEAL_MIN_SCALE: -1
 #+REVEAL_MAX_SCALE: -1
-#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_ROOT: ./
 #+REVEAL_TRANS: fade
 #+REVEAL_SPEED: default
 #+REVEAL_THEME: simple
-# #+REVEAL_EXTRA_CSS: ./css/simple.css
+# #+REVEAL_EXTRA_CSS: css/reveal.css
 #+REVEAL_EXTRA_CSS: css/custom-qike.css
-#+REVEAL_EXTRA_CSS: https://www.nas.ewi.tudelft.nl/people/mmaertens/presentations/symbreg/lib/css/tomorrow.css
+#+REVEAL_EXTRA_CSS: css/tomorrow.css
 # #+REVEAL_EXTRA_CSS: plugin/toc-progress/toc-progress.css
 #+REVEAL_EXTRA_JS: 
 #+REVEAL_HLEVEL:1
@@ -187,7 +187,7 @@ Main Challenges in Single-subject analysis:
 
 #+REVEAL: split
 
-#+BEGIN_SRC R :exports results :results graphics :file ./fig-tnbc.png :session :eval no
+#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-tnbc.png :session :eval no
 base_size <- 20
 dat_plot <- table_tnbc_A2C9[,2:3]
      ## plot data
@@ -216,7 +216,7 @@ p_tnbc
 
 
 #+RESULTS:
-[[file:./fig-tnbc.png]]
+[[file:./Figures/fig-tnbc.png]]
 
 ** Our goal 
 #+ATTR_REVEAL: :frag (appear)
@@ -618,19 +618,19 @@ Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, i
 |-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
 | DEG.. | Method | Precision       | Recall.TPR      | FPR             | F1              | Predictions        |
 |-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-| 5%    | iDEG   | 0.93 (1.6e-02)  | 0.679 (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
+|    5% | iDEG   | 0.93 (1.6e-02)  | 0.679 (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
 |       | edgeR  | 0.39 (8.4e-03)  | 0.948 (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
 |       | DESeq  | 1 (1.3e-03)     | 0.202 (3.5e-02) | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
 |-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-| 10%   | iDEG   | 0.946 (9.8e-03) | 0.734 (2.1e-02) | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
+|   10% | iDEG   | 0.946 (9.8e-03) | 0.734 (2.1e-02) | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
 |       | edgeR  | 0.527 (7.7e-03) | 0.956 (4.7e-03) | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
 |       | DESeq  | 1 (0.0e+00)     | 0.001 (1.0e-03) | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
 |-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-| 15%   | iDEG   | 0.955 (7.1e-03) | 0.767 (1.6e-02) | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
+|   15% | iDEG   | 0.955 (7.1e-03) | 0.767 (1.6e-02) | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
 |       | edgeR  | 0.608 (6.8e-03) | 0.96 (3.6e-03)  | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
 |       | DESeq  | 1 (0.0e+00)     | 0 (4.8e-05)     | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
 |-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-| 20%   | iDEG   | 0.961 (5.8e-03) | 0.787 (1.4e-02) | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
+|   20% | iDEG   | 0.961 (5.8e-03) | 0.787 (1.4e-02) | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
 |       | edgeR  | 0.666 (5.7e-03) | 0.964 (3.0e-03) | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
 |       | DESeq  | 1 (0.0e+00)     | 0 (7.9e-06)     | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
 |-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
