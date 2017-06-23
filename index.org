@@ -100,7 +100,7 @@ qike.li@gmail.com
    [[./Figures/PGX.jpg]]  
 ** Single-subject analysis
  #+ATTR_HTML: :align center 
- [[./Figures/single-subject-analysis.png]]
+ [[./Figures/single-subject-analysis2.png]]
  
 ** Single-subject analysis
 @@html:<br><br>@@
