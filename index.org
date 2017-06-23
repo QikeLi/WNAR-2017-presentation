@@ -1,0 +1,691 @@
+#+STARTUP: indent align fold hideblocks hidestars
+#+OPTIONS: reveal_center:nil reveal_control:t reveal_height:-1
+#+OPTIONS: reveal_history:nil reveal_keyboard:t reveal_overview:t
+#+OPTIONS: reveal_progress:t reveal_rolling_links:nil
+#+OPTIONS: reveal_single_file:nil reveal_slide_number:"c"
+#+OPTIONS: num:nil 
+#+OPTIONS: toc:nil
+#+OPTIONS: reveal_title_slide:nil reveal_width:-1
+#+REVEAL_MARGIN: -1
+#+REVEAL_MIN_SCALE: -1
+#+REVEAL_MAX_SCALE: -1
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_TRANS: fade
+#+REVEAL_SPEED: default
+#+REVEAL_THEME: simple
+# #+REVEAL_EXTRA_CSS: ./css/simple.css
+#+REVEAL_EXTRA_CSS: css/custom-qike.css
+#+REVEAL_EXTRA_CSS: https://www.nas.ewi.tudelft.nl/people/mmaertens/presentations/symbreg/lib/css/tomorrow.css
+# #+REVEAL_EXTRA_CSS: plugin/toc-progress/toc-progress.css
+#+REVEAL_EXTRA_JS: 
+#+REVEAL_HLEVEL:1
+#+REVEAL_TITLE_SLIDE_BACKGROUND:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_SIZE:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_POSITION:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_REPEAT:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_TRANSITION:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_SIZE:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_POSITION:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_REPEAT:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_TRANSITION:
+#+REVEAL_MATHJAX_URL: https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+#+REVEAL_PREAMBLE:
+#+REVEAL_HEAD_PREAMBLE:
+#+REVEAL_POSTAMBLE:
+#+REVEAL_MULTIPLEX_ID:
+#+REVEAL_MULTIPLEX_SECRET:
+#+REVEAL_MULTIPLEX_URL:
+#+REVEAL_MULTIPLEX_SOCKETIO_URL:
+#+REVEAL_SLIDE_HEADER:
+#+REVEAL_SLIDE_FOOTER:
+#+REVEAL_PLUGINS: (classList markdown highlight zoom notes multiplex)
+#+REVEAL_DEFAULT_FRAG_STYLE:
+# #+REVEAL_INIT_SCRIPT: { src: 'plugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize(); toc_progress.create(); } }
+#+REVEAL_HIGHLIGHT_CSS: %r/lib/css/zenburn.css
+# #+REVEAL_INIT_SCRIPT:.slide: style="text-align: left;"
+
+#+EMAIL:     qikeli@gmail.com
+#+TITLE: WNAR-2017-Qike-Li
+#+AUTHOR:    Qike Li 
+
+# the following set up for external plugins.
+# 
+#+BEGIN_SRC emacs-lisp :exports none :eval no
+;; To eable the third party plug-in:toc-progress, I need to remove "no" 
+;: after :eval for this code block and C-c C-c to evaluate this code block. 
+;; In addtion, line 19, containing 'toc-progress.css', needs to be un-commented
+;; To turn this feature off, run elisp :(custom-set-variables '(org-reveal-external-plugins nil))
+(custom-set-variables '(org-reveal-external-plugins '((toc-progress . "{src: 'plugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize(); toc_progress.create(); }}") ))) 
+#+END_SRC
+
+
+** iDEG: a single-subject method for assessing gene differential expression from two transcriptomes of an individual
+
+    #+BEGIN_EXPORT html
+    <hr class="shadow">
+    #+END_EXPORT
+Qike Li 
+
+qike.li@gmail.com
+
+[[https://qikeli.github.io][qikeli.github.io]]
+
+#+ATTR_HTML: :align left :height 110px
+[[./Figures/statistics-gidp.png]]
+
+#+ATTR_HTML: :align right :height 110px
+[[./Figures/ua_logo.png]]
+
+#+ATTR_HTML: :align center :height 110px
+[[./Figures/Lussier.png]]
+
+** Outline
+@@html:<br><br>@@
+- Background  
+- iDEG for Poisson distributed RNA-Seq data
+- iDEG for negative binomial distributed RNA-Seq data
+- Numerical studies
+* Background
+- Precision Medicine
+- Single-subject analysis
+- Example RNA-Seq quantified mRNA expression data (Single-Subject)
+- Main Challenges
+- Our goal
+- Existing Methods
+- Our solution (iDEG)
+
+** Precision Medicine 
+#+ATTR_HTML: :align center 
+   [[./Figures/PGX.jpg]]  
+** Single-subject analysis
+ #+ATTR_HTML: :align center 
+ [[./Figures/single-subject-analysis.png]]
+ 
+** Single-subject analysis
+@@html:<br><br>@@
+ #+ATTR_HTML: :style background-color:lightgray
+  @@html:<span class="fragment highlight-blue">@@Single-subject analysis@@html:</span>@@ studies  @@html:<span class="fragment highlight-blue">@@one patient@@html:</span>@@ at a time, with the purpose of revealing the  @@html:<span class="fragment highlight-blue">@@patient-specific@@html:</span>@@ disease mechanism for highly heterogeneous or rare diseases.
+** Example RNA-Seq quantified mRNA expression data (Single-Subject)
+@@html:<br>@@
+#+BEGIN_SRC R :exports none :results output :session :eval no
+load('~/Dropbox/Qike/adaptive_cutoff/Figures/Fig_BRCA_TNBC/Data/TCGA-GI-A2C9.RDat')
+
+exp_tnbc_A2C9 <- round(exp_tnbc_A2C9)
+table_tnbc_A2C9 <- data.frame(Gene = rownames(exp_tnbc_A2C9),
+                              Case_expression = exp_tnbc_A2C9$Tumor_Sample,
+                              Baseline_expression = exp_tnbc_A2C9$Healthy_Sample)
+
+table_tnbc_A2C9_print <- head(table_tnbc_A2C9,10)
+table_tnbc_A2C9_print <- ascii::ascii(table_tnbc_A2C9_print,
+               header = T,
+               include.rownames = F,
+               include.colnames = T,
+               format = 'd',
+               frame = 'topbot',
+               caption = 'TNBC example')
+
+print(table_tnbc_A2C9_print, type = 'org')
+#+END_SRC
+
+#+CAPTION: Single-subject RNA-Seq data example
+|--------+-----------------+---------------------|
+| Gene   | Case expression | Baseline expression |
+|--------+-----------------+---------------------|
+| /      |               < |                     |
+| A1BG   |              92 |                  72 |
+| A1CF   |               1 |                   0 |
+| A2BP1  |               0 |                   2 |
+| A2LD1  |             127 |                  71 |
+| A2ML1  |             773 |                  12 |
+| A2M    |           11825 |               29385 |
+| A4GALT |             871 |                 891 |
+| A4GNT  |               1 |                   5 |
+| AAA1   |               0 |                   0 |
+| AAAS   |             414 |                 460 |
+| ...    |             ... |                 ... |
+|--------+-----------------+---------------------|
+
+
+#+BEGIN_EXPORT html
+<div class="reference"> 
+<br><br><br><br>
+<font><hr></hr><sup> Table 1: Data source <a href="https://portal.gdc.cancer.gov/">https://portal.gdc.cancer.gov/</a></sup> </font>
+</div>
+#+END_EXPORT
+#+REVEAL: split
+#+ATTR_HTML: :height 600px
+[[./Figures/giphy.gif]]
+
+#+REVEAL: split 
+#+ATTR_HTML: :height 600px
+[[./Figures/TCGA-num-cases.png]]
+
+** Main Challenges
+@@html:<br><br>@@
+@@html:<div style="background-color:lightgray;">@@
+#+ATTR_HTML: :align left
+Main Challenges in Single-subject analysis:
+ - There is @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
+# @@html:</div>@@
+
+#+REVEAL: split
+
+
+#+ATTR_HTML: :align center :height 600px
+[[./Figures/nightmare_cartoon.png]]
+#+REVEAL: split
+
+** Main Challenges
+
+@@html:<div style="background-color:lightgray;">@@
+#+ATTR_HTML: :align left
+Main Challenges in Single-subject analysis:
+- There is @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
+  - For each gene, we have only two numbers two work with.
+  - Different genes have different variances. 
+
+#+REVEAL: split
+
+#+BEGIN_SRC R :exports results :results graphics :file ./fig-tnbc.png :session :eval no
+base_size <- 20
+dat_plot <- table_tnbc_A2C9[,2:3]
+     ## plot data
+
+## p_pois_fc <- 
+##     ggplot(data = dat_plot, 
+##            aes(x = rowMeans(dat_plot), y = log2(Case_expression + 1) - log2(Baseline_expression+1))) +
+##     geom_point(alpha = trans_value) +
+##     xlim(0,10000)+
+##     labs(x = TeX('$\\mu_{g1}$'), y= TeX('$log_2(Y_{g2} + 1) - log_2(Y_{g1} + 1)$')) 
+## p_pois_fc 
+
+p_tnbc <- 
+    ggplot(data = dat_plot, 
+           aes(x = rowMeans(dat_plot), y = Case_expression - Baseline_expression)) +
+    geom_point(alpha = .6) +
+    xlim(0,4000)+
+    ylim(-5000,5000)+
+    labs(x = latex2exp::TeX('$\\frac{Case + Baseline}{2}$'), y= 'Case - Baseline') +
+    theme_bw(base_size = base_size)
+p_tnbc
+#+END_SRC
+** Main Challenges
+
+ - Different genes have different variances. 
+
+
+#+RESULTS:
+[[file:./fig-tnbc.png]]
+
+** Our goal 
+#+ATTR_REVEAL: :frag (appear)
+ - How differentially expressed is a gene?
+   - An effect size of differential expression
+   
+ - What is the uncertainty of the measurement?
+   - A probability
+@@html:<br>@@
+
+ #+ATTR_REVEAL: :frag (fade-in fade-out)
+ #+ATTR_HTML: :style background-color:lightgray;font-size:30px :align center 
+ From a pair of transcriptomes collected from a single subject, can you identify differentially expressed genes?
+
+** Existing Methods
+- Arbitrary cutoff 
+  - for gene expression fold changes
+  - for gene expression absolute differences
+
+- DESeq[fn:1:]  
+
+  DESeq assumes that most genes are nonDEG and estimates a mean-variance relationship from treating the two samples as if they were replicates.
+
+#+BEGIN_EXPORT html
+<div class="reference"> 
+<br><br><br><br><br>
+<font ><hr></hr><sup>1. Anders, S. et. al., 2010, <i> Genome biology </i></sup> </font>
+</div>
+#+END_EXPORT
+
+** Existing Methods
+
+- edgeR[fn:1:]
+
+  edgeR assigns an arbitrary value of the dispersion parameter to all genes and conducts a negative binomial exact test to compute p-values.
+
+- DEGSeq[fn:2:]
+
+  DEGseq models RNA-Seq data by binomial distribution and groups genes with similar expression level to estimate the variance in their expression counts.  It is insufficient to model over-dispersed RNA-Seq data. 
+
+#+BEGIN_EXPORT html
+<!-- For future reference: -->
+<!-- The following script is used when multiple references need to be listed as a list -->
+<div class="referencelist"> 
+<hr></hr>
+<ol>
+<li style="font-size:85%"> Robinson, M. D. et. al., 2010, <i>Bioinformatics</i> </li>
+<li style="font-size:85%"> Wang, L. et al., 2009, <i>Bioinformatics</i></li>
+</ol>
+</div>
+#+END_EXPORT
+
+** Our solution (iDEG)
+@@html:<br><br>@@
+#+ATTR_REVEAL: :frag (appear)
+- *Bypass gene-level variance estimation*: Transform RNA-Seq data such that all null genes have the same variance.
+- *Borrow strength across genes*: model all genes in a single model
+
+* An example of Poisson distributed single subject RNA-Seq data
+- Using Poisson distribution to model RNA-Seq data
+- Simulate a single-subject dataset
+- Variance Stabilizing Transformation (VST)
+- Two-group mixture model
+** Using Poisson distribution to model RNA-Seq data
+ - While RNA-Seq data are usually modeled by negative binomial distribution to account for over-dispersion of expression counts, the over-dispersion may be negligible and Poisson distribution can fit the data well [fn:1:] when the two samples under comparison are processed with due caution in single-subject analysis.
+ -  Moreover, the assumption of Poisson distribution facilitates a simpler testing procedure of iDEG. 
+#+BEGIN_EXPORT html
+<div align="left"> 
+<br>
+<font size="3%" float="left"><hr></hr><sup> 1. Mortazavi, A., et al., 2008 <i> Nature methods </i></sup> </font>
+<div>
+#+END_EXPORT
+** Simulate a single-subject dataset
+We simulate a pair of transcriptomes as an illustrative example
+#+ATTR_HTML: :align right :style font-size:90%
+\begin{eqnarray*}
+  Y_{g1} &\sim& \text{Poisson}(\mu_{g1})\\
+  Y_{g2} &\sim& \text{Poisson}(\mu_{g2})\\ 
+    P(\mu_{g1}) &=& \frac{1}{|\mathcal{B}|} \\
+&& \mu_{g1} \in \mathcal{B}\\ 
+&& g = 1,2, \cdots, G  \\
+ && \mathcal{B} = \{10,11,\cdots,10000\}
+ \end{eqnarray*}
+
+** Simulate a single-subject dataset
+#+BEGIN_EXPORT html
+<div align="right"> 
+<font style="background-color:lightgray"> <i> Cont'd </i> </font>
+</div>
+#+END_EXPORT
+
+#+ATTR_HTML: :style font-size:90% 
+\begin{eqnarray*}
+\mu_{g2} &=& \begin{cases}
+\mu_{g1}  & \text{if }g \in \overline{\mathcal{G}},\\
+d^{s}\mu_{g1}   & \text{if }g \in \mathcal{G}.\end{cases}\\
+&&\text{where $\mathcal{G}$ is a random subset of set $\{1,2, \cdots, 20000\}$}\\
+\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.1 \label{eq:DEG-pct}\\
+d  &=& \frac{\mu_{g1} + n \sqrt{\mu_{g1}}}{\mu_{g1}}\label{eq:DEG-fold-change}\\
+s &=& \begin{cases} 1 &\text{with probability of }0.5,\\
+-1 &\text{with probability of }0.5.\end{cases} \label{eq:fold-change-direction}\\
+n &\sim& \mathcal{N}(4,1)\label{eq:num-sd-dist}
+\end{eqnarray*}
+
+** Simulate a single-subject dataset
+
+#+BEGIN_SRC R :exports none :results output :session :eval no
+rm(list=ls())
+library(gtable)
+library(grid)
+library(gridExtra)
+library(latex2exp)
+ 
+## load in ggplot objects
+load('~/Dropbox/Qike/adaptive_cutoff/Figures/Fig_examples/Results/fig-examples.RData', verbose = T)
+
+## define a function to 
+get_legend<-function(myggplot){
+    ## Grab the legend of a ggplot obe
+    ## 
+    ## Args:
+    ##   myggplot: a ggplot that contains to the legend to be grabbed 
+    ##
+    ## Returns:
+    ##   a gtable object that contains the lengend
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+base_size <- 20
+## panel 1
+p1 <- p_pois +
+    theme_bw(base_size = base_size) +
+    guides(col = guide_legend(title = "DEG status", title.position = "left"),
+           shape = guide_legend(title = "DEG status", title.position = "left")) +
+    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
+    theme(legend.position = 'top') 
+    ## ggtitle('Before VST')
+
+
+## panel 2
+p2 <- p_pois_tran +
+    theme_bw(base_size = base_size) +
+    guides(col = guide_legend(title = "DEG status", title.position = "left"),
+           shape = guide_legend(title = "DEG status", title.position = "left")) +
+    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
+    theme(legend.position = 'top') 
+    ## ggtitle('After VST')
+
+## ## grab the legned from panel 2
+## p_legend <- get_legend(p2)
+
+## ## remove the lenged for panel 2
+## p2 <-  p2 + theme(legend.position = 'none')
+
+## panel 3
+p3 <- p_pois_iDEG +
+    theme_bw(base_size = base_size) +
+    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
+    labs(x = TeX('$d_g^*$')) 
+    ## ggtitle(TeX('Histogram of $d_g^*$'))
+
+## panel 4
+p4 <- p_pois_fdr +
+    theme_bw(base_size = base_size) +
+    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
+    labs(x = TeX('$d_g^*$'), y = "local false dsicovery rate") 
+    ## ggtitle(TeX('Pr(gene is null | $d_g^*$)'))
+#+END_SRC
+
+#+RESULTS:
+: Loading objects:
+:   p_pois
+:   p_pois_tran
+:   p_pois_iDEG
+:   p_nb
+:   p_nb_tran
+:   p_nb_iDEG
+:   p_pois_fdr
+
+#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-before-VST.png :session :height 600 :width 580 :eval no
+print(p1)
+#+END_SRC
+
+#+ATTR_HTML: :height 600px
+#+RESULTS:
+[[file:./Figures/fig-before-VST.png]]
+
+** Variance Stabilizing Transformation (VST)
+
+#+ATTR_HTML: :align left
+ Freeman and Tukey[fn:1:] developed a variance-stabilizing transformation (VST), $h_{Pois}(\cdot)$, to transform Poisson data, such that the transformed data approximately follow a Normal distribution with the same variance regardless of their means. Namely, if $Y_{gd} \sim Poisson(\mu_{gd})$, then 
+
+#+ATTR_HTML: :style font-size:90% 
+  \begin{equation*}
+    \label{eq:tPois}
+    \begin{split}
+      h_{Pois}(Y_{gd}) = \sqrt{Y_{gd}}+\sqrt{Y_{gd} +1} \overset{\cdot}{\sim}  N(\mu = \sqrt{\mu_{gd}}+\sqrt{\mu_{gd}+1}, \sigma^2 = 1)\\
+      g = 1,\cdots,G; d=1,2
+    \end{split}
+  \end{equation*}
+
+
+#+BEGIN_EXPORT html
+<div class="reference"> 
+<br><br><br><br><br><br>
+<font ><hr></hr><sup>1. Freeman, M. F., et. al. 1950, <i> The Annals of Mathematical Statistics </i></sup> </font>
+</div>
+#+END_EXPORT
+
+** Variance Stabilizing Transformation (VST)
+
+@@html:<br><br><br>@@
+#+ATTR_HTML: :style font-size:90% 
+\begin{equation*}
+  \label{eq:testStatPois}
+  \begin{split}
+    D_{g}^{*} = \sqrt{Y_{g1}}+\sqrt{Y_{g1} +1} - (\sqrt{Y_{g2}}+\sqrt{Y_{g2}+1}) \overset{\cdot}{\sim} N(\mu = 0, \sigma = \sqrt{2})\\
+    g \in \overline{\mathcal{G}}
+  \end{split}
+\end{equation*}
+
+
+** Variance Stabilizing Transformation (VST)
+
+#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-after-VST.png :session :height 600 :width 580 :eval no
+print(p2)
+#+END_SRC
+
+#+RESULTS:
+[[file:./Figures/fig-after-VST.png]]
+
+** Two-group mixture model
+@@html:<br>@@
+#+ATTR_HTML: :align left
+First, we standardize $D_{g}^{*}$,
+
+#+ATTR_HTML: :style font-size:90% 
+ \begin{eqnarray*}
+ &&\qquad Z_{g} = \frac{D^{*}_g}{MAD(D^{*})} \\
+ &&\qquad \qquad  \text{where } \text{MAD}(D^{*}) = \mathrm{median}\big(|D^{*}_g - \mathrm{median}(D^{*})|\big)\\
+ && \qquad \qquad  g = 1,\cdots,G                  
+ \end{eqnarray*}
+
+** Two-group mixture model
+#+ATTR_HTML: :align left
+Suppose $G$ genes are measured in the RNA-Seq experiment, each of the genes is either null or differentially expressed with prior probabilities $\pi_{0}$ or $\pi_{1} = 1-\pi_{0}$. And the density function of $z_{g}$ is either $f_{0}(z)$ or $f_{1}(z)$.
+
+#+ATTR_HTML: :style font-size:90% 
+\begin{eqnarray*}
+      \pi_{0} = Pr\{\mbox{gene $g$ is null}\} & \mbox{density is $f_{0}(z)$ if null}\\
+    \pi_{1} = Pr\{\mbox{gene $g$ is DEG}\}  & \mbox{density is $f_{1}(z)$ if DEG}
+\end{eqnarray*}
+
+#+ATTR_HTML: :align left
+The marginal mixture density is:
+#+ATTR_HTML: :style font-size:90% 
+\begin{equation*}
+  \label{eq:mixtureDens}
+  f(z) = \pi_{0}f_{0}(z) + \pi_{1}f_{1}(z)
+\end{equation*}
+
+** Two-group mixture model
+#+ATTR_HTML: :align left
+The local false positive rate, $fdr$, is the Bayes posterior probability that a gene $g$ is a null gene given $z_{g}$: 
+@@html:<br><br>@@
+#+ATTR_HTML: :style font-size:90% 
+\begin{equation*}
+  \label{eq:locfdr}
+  fdr(z) \equiv Pr\{\text{null gene} | z\} = \pi_{0}f_{0}(z)/f(z)
+\end{equation*}
+
+** Two-group mixture model
+#+ATTR_HTML: :align left :style font-size:90%
+@@html:<br>@@
+$f_{0}$ corresponds to a empirical null distribution. 
+#+ATTR_HTML: :align left :style font-size:90%
+In large-scale simultaneous hypothesis testing, the theoretical null may be deficient due to various reasons: 
+
+- correlation across genes
+
+- unobserved covariates (e.g. gender, age, smoking status, etc.)
+
+- or failed mathematical assumptions (e.g. asymptotic approximation).
+#+ATTR_HTML: :align left :style font-size:90%
+ Fortunately, in large-scale simultaneous testing, the parallel structure allows the estimation of an empirical null distribution, via empirical Bayes, from the own data of the study. 
+* iDEG for negative binomial distributed RNA-Seq data
+
+- Model RNA-Seq data with negative binomial distribution
+- VST for negative binomial distribution
+- Assumptions and approximation
+- Estimate $\scriptsize{\delta_g}$
+
+** Model RNA-Seq data with negative binomial distribution
+#+ATTR_HTML: :align left :style font-size:90%
+Parameter $\delta_{g}$ in negative binomial distribution accounts for the overdispersion. 
+
+#+ATTR_HTML: :style font-size:90%
+\begin{eqnarray*}
+    P(y_{gd} | \mu_{gd}, \delta_g)  &=& 
+    (1 + \delta_{g}\mu_{gd})^{-1/\delta_{g}} \frac{\Gamma(y_{gd} + 1/\delta_{g})}{y_{gd}!\Gamma(1/\delta_{g})} \big(\frac{\delta_{g}\mu_{gd}}{1 + \delta_{g}\mu_{gd}}\big)^{y_{gd}} \nonumber \\
+    &&\quad y_{gd}  = 0,1,\cdots\; \quad g=1, \cdots, G; \quad d= 1,2 \label{eq:nb}\\
+  E(Y_{gd}) &=& \mu_{gd}\\
+  Var(Y_{gd}) &=& \mu_{gd} + \delta_{g}\mu_{gd}^{2}\label{eq:nbVar}
+\end{eqnarray*}
+
+** VST for negative binomial distribution
+@@html:<br><br>@@
+#+ATTR_HTML: :style font-size:90%
+\begin{equation*}
+  \label{eq:NBvst}
+  h_{nb}(Y_{gd}) = \frac{1}{\sqrt{\delta_{g}}}sinh^{-1}\sqrt{Y_{gd} \delta_{g}} \overset{\cdot}{\sim} N(\mu=\frac{1}{\sqrt{\delta_{g}}}sinh^{-1}\sqrt{\mu_{gd} \delta_{g}}, \sigma^{2} = \frac{1}{4})
+\end{equation*}
+
+** Assumptions and approximation
+
+  - We assume $\delta_{g1} = \delta_{g2} = \delta_{g}$ and $\delta_{g}$ is a smooth function of the expression mean $\mu_{g}$. Consequently, genes with the same $\mu_{g}$ follow the same distribution.
+  - We make an approximation by pooling genes with close expression means to estimate $\delta_{g}$.  Specifically,   
+#+ATTR_HTML: :style font-size:80%
+\begin{eqnarray*}
+    && Y_{gd} \overset{\cdot}{\sim} NB(\mu_w,\delta_w) \nonumber\\
+    && \qquad \forall g \in \{\text{null genes in }w^{th} \text{window}\}\\
+    && \qquad  d = 1,2      
+\end{eqnarray*}
+
+  - We assume the majority of the genes are null genes, and estimate $\mu_{w}$ and $\sigma^{2}_{w}$ for each window by outlier robust estimators, median and MAD, respectively. 
+
+** Estimate $\scriptsize{\delta_g}$
+#+ATTR_HTML: :align left
+With the estimated $\hat{\mu}_{w}$ and $\hat{\delta}_{w}$ from each window, we fit a smooth spline of $\hat{\mu}_{w}$ and $\hat{\delta}_{w}$ by minimizing the penalized residual sum of squares:
+
+#+ATTR_HTML: :style font-size:90%
+\begin{equation*}
+  \label{eq:smoothFit}
+  RSS(f,\mu) =   \sum_{w=1}^{W} (\hat{\delta}_w-f(\hat{\mu}_w))^2 + \mu\int f^{''}(\hat{\mu}_w)^2 dt
+\end{equation*}
+#+ATTR_HTML: :align left
+Then, we we estimate $\delta_g$ for each gene,
+\begin{equation}
+  \label{eq:prediction}
+\hat{\delta}_g = \hat{\delta}_w' = q(\hat{\mu}_w) \qquad \forall g \in \{g : Gene_g \in w^{th}\text{ window}\}
+\end{equation}
+
+
+* Numerical studies
+- Procedure
+- Method evaluation 
+- Sensitivity Analysis
+
+** Procedure
+- **Step 1:** Simulate one single-subject datasets (Poisson assumption or negative binomial assumption), which contains $p \%$ DEG. 
+- **Step 2:** Conduct iDEG, DESeq, edgeR, and DEGseq.
+- **Step 3:** Compute F1 score for each method,
+#+ATTR_HTML: :style font-size:90%
+\begin{equation*}
+F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}   
+\end{equation*}
+- **Step 4:** Repeat Step1-Step3 for 1000 times
+- **Step 5:** Calculate the arithmetic mean and standard deviation of the 1000 $F_{1}$ resulted from each method.
+- **Step 6:** Change the value of $p$, repeat Step 1-Step 5
+
+** Method evaluation 
+
+#+ATTR_HTML: :width 85%
+[[./Figures/fig-numerical-study.png]]
+
+** Method evaluation 
+
+- Poisson case:
+
+|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
+| DEG% | Method | Precision       | Recall (TPR)    | FPR             | F1              | Predictions       |
+|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
+|   5% | iDEG   | 0.987 (4.8e-03) | 0.879 (1.3e-02) | 0.001 (2.3e-04) | 0.929 (7.1e-03) | 890.46 (1.5e+01)  |
+|      | edgeR  | 0.918 (8.2e-03) | 0.934 (8.3e-03) | 0.004 (4.8e-04) | 0.926 (6.2e-03) | 1017.52 (1.2e+01) |
+|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
+|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
+|  10% | iDEG   | 0.988 (3.3e-03) | 0.904 (8.1e-03) | 0.001 (3.4e-04) | 0.944 (3.9e-03) | 1829.1 (2.0e+01)  |
+|      | edgeR  | 0.923 (5.2e-03) | 0.95 (5.1e-03)  | 0.009 (6.5e-04) | 0.936 (3.4e-03) | 2059.95 (1.7e+01) |
+|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
+|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
+|  15% | iDEG   | 0.991 (2.4e-03) | 0.913 (7.5e-03) | 0.001 (4.0e-04) | 0.95 (3.6e-03)  | 2764.26 (2.7e+01) |
+|      | edgeR  | 0.926 (5.0e-03) | 0.959 (3.4e-03) | 0.014 (1.0e-03) | 0.942 (3.0e-03) | 3105.66 (2.1e+01) |
+|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
+|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
+|  20% | iDEG   | 0.991 (2.3e-03) | 0.921 (6.3e-03) | 0.002 (5.4e-04) | 0.955 (2.9e-03) | 3716.23 (3.1e+01) |
+|      | edgeR  | 0.93 (4.1e-03)  | 0.963 (3.1e-03) | 0.018 (1.1e-03) | 0.946 (2.7e-03) | 4143.99 (2.2e+01) |
+|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
+|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
+
+#+ATTR_html: :style font-size:66% :align left
+Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examines tens of thousands of genes in a high-throughput manner.
+
+** Method evaluation 
+- negative binomial case
+
+|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+| DEG.. | Method | Precision       | Recall.TPR      | FPR             | F1              | Predictions        |
+|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+| 5%    | iDEG   | 0.93 (1.6e-02)  | 0.679 (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
+|       | edgeR  | 0.39 (8.4e-03)  | 0.948 (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
+|       | DESeq  | 1 (1.3e-03)     | 0.202 (3.5e-02) | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
+|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+| 10%   | iDEG   | 0.946 (9.8e-03) | 0.734 (2.1e-02) | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
+|       | edgeR  | 0.527 (7.7e-03) | 0.956 (4.7e-03) | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
+|       | DESeq  | 1 (0.0e+00)     | 0.001 (1.0e-03) | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
+|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+| 15%   | iDEG   | 0.955 (7.1e-03) | 0.767 (1.6e-02) | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
+|       | edgeR  | 0.608 (6.8e-03) | 0.96 (3.6e-03)  | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
+|       | DESeq  | 1 (0.0e+00)     | 0 (4.8e-05)     | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
+|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+| 20%   | iDEG   | 0.961 (5.8e-03) | 0.787 (1.4e-02) | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
+|       | edgeR  | 0.666 (5.7e-03) | 0.964 (3.0e-03) | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
+|       | DESeq  | 1 (0.0e+00)     | 0 (7.9e-06)     | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
+|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+
+** Sensitivity Analysis
+
+#+ATTR_html: :align left
+Our experience indicates that without making assumptions on RNA-Seq data, it is difficult to construct suitable statistical inferences for a single-subject dataset. Nonetheless we test the two main assumptions we make:
+
+- The value of dispersion parameter is a function of expression mean.
+
+- The majority of the genes are null genes. 
+
+** Sensitivity Analysis
+  - Draw  dispersion parameter $\delta_{g}$ from a uniform distribution $\text{unif}(0.001, 0.1)$. 
+[[./Figures/fig-sensitivity-random.png]]
+
+** Sensitivity Analysis
+ - Simulate single-subject datasets with a series of percentages of DEG. 
+
+ [[./Figures/fig-sensitivity-highDEG.png]]
+
+* Acknowledgements
+
+#+BEGIN_EXPORT html
+<div class="sliderow">
+
+<div class="leftcol">
+<br>
+<img src="http://www.stat.ncsu.edu/people/photos/hao_zhang.jpg"  style="float:left;width:35%;height:45%;"/> 
+<p > Helen Hao Zhang </p>
+<br>
+<br>
+<br>
+<br>
+<img src="http://deptmedicine.arizona.edu/sites/default/files/styles/1x_smartphone/public/lussier.jpg?itok=n-R0y_3l&timestamp=1481818852" style="float:left;width:35%;height:45%;" align="left"/>
+<p > Yves A. Lussier </p>
+</div>
+
+
+<div class="rightcol">
+<br>
+<img src="http://u.arizona.edu/~haiquan/Haiquan_tucson.jpg"  style="float:left;width:30%;height:38%;"/> 
+<p > Haiquan Li</p>
+<br>
+<br>
+<img src="http://cb2.uahs.arizona.edu/sites/default/files/styles/1x_smartphone/public/201609208_berghout_joanne_deptofmed-20.jpg?itok=tcjyq9Ci&timestamp=1490681347" style="float:left;width:30%;height:38%;" align="left"/>
+<p > Joanne Berghout </p>
+
+<br>
+<br>
+<img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/7/005/059/11e/383a2fd.jpg" style="float:left;width:30%;height:38%;" align="left"/>
+<p > Grant Schissler </p>
+
+</div>
+
+</div>
+#+END_EXPORT
