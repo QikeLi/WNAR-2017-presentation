@@ -92,8 +92,8 @@ qike.li@gmail.com
 - Example RNA-Seq quantified mRNA expression data (Single-Subject)
 - Main Challenges
 - Our goal
-- Existing Methods
 - Our solution (iDEG)
+- Existing Methods
 
 ** Precision Medicine 
 #+ATTR_HTML: :align center 
@@ -429,7 +429,7 @@ print(p1)
 </div>
 #+END_EXPORT
 
-** Variance Stabilizing Transformation (VST)
+** VST
 
 @@html:<br><br><br>@@
 #+ATTR_HTML: :style font-size:90% 
@@ -442,13 +442,11 @@ print(p1)
 \end{equation*}
 
 
-** Variance Stabilizing Transformation (VST)
-
-#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-after-VST.png :session :height 600 :width 580 :eval no
+** VST
+#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-after-VST.png :session :height 550 :width 500 :eval no
 print(p2)
 #+END_SRC
 
-#+RESULTS:
 [[file:./Figures/fig-after-VST.png]]
 
 ** Two-group mixture model
