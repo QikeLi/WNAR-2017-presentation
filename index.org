@@ -83,8 +83,7 @@ qike.li@gmail.com
 ** Outline
 @@html:<br>@@
 - Background  
-- iDEG for Poisson distributed RNA-Seq data
-- iDEG for negative binomial distributed RNA-Seq data
+- Methodology--iDEG
 - Numerical studies
 * Background
 - Precision Medicine
@@ -93,19 +92,18 @@ qike.li@gmail.com
 - Main Challenges
 - Our goal
 - Our solution (iDEG)
-- Existing Methods
 
 ** Precision Medicine 
 #+ATTR_HTML: :align center 
    [[./Figures/PGX.jpg]]  
-** Single-subject analysis
- #+ATTR_HTML: :align center 
- [[./Figures/single-subject-analysis2.png]]
  
 ** Single-subject analysis
 @@html:<br><br>@@
  #+ATTR_HTML: :style background-color:lightgray
-  @@html:<span class="fragment highlight-blue">@@Single-subject analysis@@html:</span>@@ studies  @@html:<span class="fragment highlight-blue">@@one patient@@html:</span>@@ at a time, with the purpose of revealing the  @@html:<span class="fragment highlight-blue">@@patient-specific@@html:</span>@@ disease mechanism for highly heterogeneous or rare diseases.
+  @@html:<span class="fragment highlight-blue">@@Single-subject analysis@@html:</span>@@ studies  @@html:<span class="fragment highlight-blue">@@one patient@@html:</span>@@ at a time, with the purpose of revealing the  @@html:<span class="fragment highlight-blue">@@patient-specific@@html:</span>@@ disease mechanism for highly heterogeneous diseases.
+** Single-subject analysis
+ #+ATTR_HTML: :align center 
+ [[./Figures/single-subject-analysis2.png]]
 ** Example RNA-Seq quantified mRNA expression data (Single-Subject)
 @@html:<br>@@
 #+BEGIN_SRC R :exports none :results output :session :eval no
@@ -156,11 +154,6 @@ print(table_tnbc_A2C9_print, type = 'org')
 #+REVEAL: split
 #+ATTR_HTML: :height 600px
 [[./Figures/giphy.gif]]
-
-#+REVEAL: split 
-#+ATTR_HTML: :height 600px
-[[./Figures/TCGA-num-cases.png]]
-
 ** Main Challenges
 @@html:<br><br>@@
 @@html:<div style="background-color:lightgray;">@@
@@ -174,7 +167,6 @@ Main Challenges in Single-subject analysis:
 
 #+ATTR_HTML: :align center :height 600px
 [[./Figures/nightmare_cartoon.png]]
-#+REVEAL: split
 
 ** Main Challenges
 
@@ -182,10 +174,8 @@ Main Challenges in Single-subject analysis:
 #+ATTR_HTML: :align left
 Main Challenges in Single-subject analysis:
 - There is @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
-  - For each gene, we have only two numbers two work with.
   - Different genes have different variances. 
-
-#+REVEAL: split
+  - For each gene, we have only two numbers to work with.
 
 #+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-tnbc.png :session :eval no
 base_size <- 20
@@ -210,143 +200,32 @@ p_tnbc <-
     theme_bw(base_size = base_size)
 p_tnbc
 #+END_SRC
-** Main Challenges
-
- - Different genes have different variances. 
-
-
-#+RESULTS:
-[[file:./Figures/fig-tnbc.png]]
-
 ** Our goal 
 #+ATTR_REVEAL: :frag (appear)
  - How differentially expressed is a gene?
-   - An effect size of differential expression
+   - A meaningful effect size of differential expression
    
  - What is the uncertainty of the measurement?
-   - A probability
+   - A probability of gene differential expression.
 @@html:<br>@@
 
- #+ATTR_REVEAL: :frag (fade-in fade-out)
- #+ATTR_HTML: :style background-color:lightgray;font-size:30px :align center 
- From a pair of transcriptomes collected from a single subject, can you identify differentially expressed genes?
-
-** Existing Methods
-- Arbitrary cutoff 
-  - for gene expression fold changes
-  - for gene expression absolute differences
-
-- DESeq[fn:1:]  
-
-  DESeq assumes that most genes are nonDEG and estimates a mean-variance relationship from treating the two samples as if they were replicates.
-
-#+BEGIN_EXPORT html
-<div class="reference"> 
-<br><br><br><br><br>
-<font ><hr></hr><sup>1. Anders, S. et. al., 2010, <i> Genome biology </i></sup> </font>
-</div>
-#+END_EXPORT
-
-** Existing Methods
-
-- edgeR[fn:1:]
-
-  edgeR assigns an arbitrary value of the dispersion parameter to all genes and conducts a negative binomial exact test to compute p-values.
-
-- DEGSeq[fn:2:]
-
-  DEGseq models RNA-Seq data by binomial distribution and groups genes with similar expression level to estimate the variance in their expression counts.  It is insufficient to model over-dispersed RNA-Seq data. 
-
-#+BEGIN_EXPORT html
-<!-- For future reference: -->
-<!-- The following script is used when multiple references need to be listed as a list -->
-<div class="referencelist"> 
-<hr></hr>
-<ol>
-<li style="font-size:85%"> Robinson, M. D. et. al., 2010, <i>Bioinformatics</i> </li>
-<li style="font-size:85%"> Wang, L. et al., 2009, <i>Bioinformatics</i></li>
-</ol>
-</div>
-#+END_EXPORT
-
 ** Our solution (iDEG)
-@@html:<br><br>@@
+@@html:<br>@@
 #+ATTR_REVEAL: :frag (appear)
-- *Bypass gene-level variance estimation*: Transform RNA-Seq data such that all null genes have the same variance.
+- *Bypass gene-level variance estimation*: Transform RNA-Seq data such that, under null hypothesis, all genes have the same variance.
 - *Borrow strength across genes*: model all genes in a single model
-
-* An example of Poisson distributed single subject RNA-Seq data
-- Using Poisson distribution to model RNA-Seq data
-- Simulate a single-subject dataset
-- Variance Stabilizing Transformation (VST)
+* Methodology--iDEG
+@@html:<br>@@
+- Data transformation
 - Two-group mixture model
-** Using Poisson distribution to model RNA-Seq data
- - While RNA-Seq data are usually modeled by negative binomial distribution to account for over-dispersion of expression counts, the over-dispersion may be negligible and Poisson distribution can fit the data well [fn:1:] when the two samples under comparison are processed with due caution in single-subject analysis.
- -  Moreover, the assumption of Poisson distribution facilitates a simpler testing procedure of iDEG. 
-#+BEGIN_EXPORT html
-<div align="left"> 
-<br>
-<font size="3%" float="left"><hr></hr><sup> 1. Mortazavi, A., et al., 2008 <i> Nature methods </i></sup> </font>
-<div>
-#+END_EXPORT
-** Simulate a single-subject dataset
-We simulate a pair of transcriptomes as an illustrative example
-#+ATTR_HTML: :align right :style font-size:90%
-\begin{eqnarray*}
-  Y_{g1} &\sim& \text{Poisson}(\mu_{g1})\\
-  Y_{g2} &\sim& \text{Poisson}(\mu_{g2})\\ 
-    P(\mu_{g1}) &=& \frac{1}{|\mathcal{B}|} \\
-&& \mu_{g1} \in \mathcal{B}\\ 
-&& g = 1,2, \cdots, G  \\
- && \mathcal{B} = \{10,11,\cdots,10000\}
- \end{eqnarray*}
 
-** Simulate a single-subject dataset
-#+BEGIN_EXPORT html
-<div align="right"> 
-<font style="background-color:lightgray"> <i> Cont'd </i> </font>
-</div>
-#+END_EXPORT
-
-#+ATTR_HTML: :style font-size:90% 
-\begin{eqnarray*}
-\mu_{g2} &=& \begin{cases}
-\mu_{g1}  & \text{if }g \in \overline{\mathcal{G}},\\
-d^{s}\mu_{g1}   & \text{if }g \in \mathcal{G}.\end{cases}\\
-&&\text{where $\mathcal{G}$ is a random subset of set $\{1,2, \cdots, 20000\}$}\\
-\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.1 \label{eq:DEG-pct}\\
-d  &=& \frac{\mu_{g1} + n \sqrt{\mu_{g1}}}{\mu_{g1}}\label{eq:DEG-fold-change}\\
-s &=& \begin{cases} 1 &\text{with probability of }0.5,\\
--1 &\text{with probability of }0.5.\end{cases} \label{eq:fold-change-direction}\\
-n &\sim& \mathcal{N}(4,1)\label{eq:num-sd-dist}
-\end{eqnarray*}
-
-** Simulate a single-subject dataset
-
+** Data transformation
 #+BEGIN_SRC R :exports none :results output :session :eval no
 rm(list=ls())
-library(gtable)
-library(grid)
-library(gridExtra)
-library(latex2exp)
  
 ## load in ggplot objects
 load('~/Dropbox/Qike/adaptive_cutoff/Figures/Fig_examples/Results/fig-examples.RData', verbose = T)
 
-## define a function to 
-get_legend<-function(myggplot){
-    ## Grab the legend of a ggplot obe
-    ## 
-    ## Args:
-    ##   myggplot: a ggplot that contains to the legend to be grabbed 
-    ##
-    ## Returns:
-    ##   a gtable object that contains the lengend
-  tmp <- ggplot_gtable(ggplot_build(myggplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)
-}
 
 base_size <- 20
 ## panel 1
@@ -354,9 +233,10 @@ p1 <- p_pois +
     theme_bw(base_size = base_size) +
     guides(col = guide_legend(title = "DEG status", title.position = "left"),
            shape = guide_legend(title = "DEG status", title.position = "left")) +
-    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
-    theme(legend.position = 'top') 
-    ## ggtitle('Before VST')
+    ggtitle('Before Transformation') + 
+    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"),
+          plot.title = element_text(hjust = 0.5,lineheight=.8, face="bold")) 
+
 
 
 ## panel 2
@@ -364,29 +244,15 @@ p2 <- p_pois_tran +
     theme_bw(base_size = base_size) +
     guides(col = guide_legend(title = "DEG status", title.position = "left"),
            shape = guide_legend(title = "DEG status", title.position = "left")) +
-    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
-    theme(legend.position = 'top') 
-    ## ggtitle('After VST')
+    ggtitle('After Transformation') +
+    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"),
+          plot.title = element_text(hjust = 0.5,lineheight=.8, face="bold")) +
+    labs(y = latex2exp::TeX('$h(Y_{g2}) - h(Y_{g1})$'))
 
-## ## grab the legned from panel 2
-## p_legend <- get_legend(p2)
 
-## ## remove the lenged for panel 2
-## p2 <-  p2 + theme(legend.position = 'none')
-
-## panel 3
-p3 <- p_pois_iDEG +
-    theme_bw(base_size = base_size) +
-    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
-    labs(x = TeX('$d_g^*$')) 
-    ## ggtitle(TeX('Histogram of $d_g^*$'))
-
-## panel 4
-p4 <- p_pois_fdr +
-    theme_bw(base_size = base_size) +
-    theme(plot.margin = unit(c(2.5,.5,0.5,1.2), "lines"))+
-    labs(x = TeX('$d_g^*$'), y = "local false dsicovery rate") 
-    ## ggtitle(TeX('Pr(gene is null | $d_g^*$)'))
+p_comb <- cowplot::plot_grid(p1 + theme(legend.position = 'none'),
+                             p2 + theme(legend.position = 'none'),
+                             ncol = 2)
 #+END_SRC
 
 #+RESULTS:
@@ -399,67 +265,39 @@ p4 <- p_pois_fdr +
 :   p_nb_iDEG
 :   p_pois_fdr
 
-#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-before-VST.png :session :height 600 :width 580 :eval no
-print(p1)
+#+BEGIN_SRC R :exports none :results graphics :file ./Figures/fig-beforeVST.png :width 500 :height 600 :session :eval no
+plot(p1 + theme(legend.position = 'bottom') + ggtitle(''))
 #+END_SRC
 
-#+ATTR_HTML: :height 600px
 #+RESULTS:
-[[file:./Figures/fig-before-VST.png]]
+[[file:./Figures/fig-beforeVST.png]]
 
-** Variance Stabilizing Transformation (VST)
+[[./Figures/fig-beforeVST.png]]
 
-#+ATTR_HTML: :align left
- Freeman and Tukey[fn:1:] developed a variance-stabilizing transformation (VST), $h_{Pois}(\cdot)$, to transform Poisson data, such that the transformed data approximately follow a Normal distribution with the same variance regardless of their means. Namely, if $Y_{gd} \sim Poisson(\mu_{gd})$, then 
+** Data transformation
 
-#+ATTR_HTML: :style font-size:90% 
-  \begin{equation*}
-    \label{eq:tPois}
-    \begin{split}
-      h_{Pois}(Y_{gd}) = \sqrt{Y_{gd}}+\sqrt{Y_{gd} +1} \overset{\cdot}{\sim}  N(\mu = \sqrt{\mu_{gd}}+\sqrt{\mu_{gd}+1}, \sigma^2 = 1)\\
-      g = 1,\cdots,G; d=1,2
-    \end{split}
-  \end{equation*}
-
-
-#+BEGIN_EXPORT html
-<div class="reference"> 
-<br><br><br><br><br><br>
-<font ><hr></hr><sup>1. Freeman, M. F., et. al. 1950, <i> The Annals of Mathematical Statistics </i></sup> </font>
-</div>
-#+END_EXPORT
-
-** VST
-
-@@html:<br><br><br>@@
-#+ATTR_HTML: :style font-size:90% 
-\begin{equation*}
-  \label{eq:testStatPois}
-  \begin{split}
-    D_{g}^{*} = \sqrt{Y_{g1}}+\sqrt{Y_{g1} +1} - (\sqrt{Y_{g2}}+\sqrt{Y_{g2}+1}) \overset{\cdot}{\sim} N(\mu = 0, \sigma = \sqrt{2})\\
-    g \in \overline{\mathcal{G}}
-  \end{split}
-\end{equation*}
-
-
-** VST
-#+BEGIN_SRC R :exports results :results graphics :file ./Figures/fig-after-VST.png :session :height 550 :width 500 :eval no
-print(p2)
+#+BEGIN_SRC R :exports none :results graphics :file ./Figures/fig-trans.png :session :width 850 :height 600 :eval no
+cowplot::plot_grid(p_comb, get_legend(p1 + theme(legend.position = 'bottom')),ncol = 1, rel_heights = c(3, .3)) 
 #+END_SRC
 
-[[file:./Figures/fig-after-VST.png]]
+#+RESULTS:
+[[file:./Figures/fig-trans.png]]
 
-** Two-group mixture model
-@@html:<br>@@
+[[./Figures/fig-trans.png]]
+
+** Data transformation
+@@html:<br><br>@@
+
 #+ATTR_HTML: :align left
-First, we standardize $D_{g}^{*}$,
+Under null hypothesis:
+
+@@html:<br>@@
 
 #+ATTR_HTML: :style font-size:90% 
- \begin{eqnarray*}
- &&\qquad Z_{g} = \frac{D^{*}_g}{MAD(D^{*})} \\
- &&\qquad \qquad  \text{where } \text{MAD}(D^{*}) = \mathrm{median}\big(|D^{*}_g - \mathrm{median}(D^{*})|\big)\\
- && \qquad \qquad  g = 1,\cdots,G                  
- \end{eqnarray*}
+ \begin{eqnarray}
+ \qquad Z_{g} &=& h(Y_{g2}) - h(Y_{g1}) \overset{\cdot}{\sim} \text{N}(0,c) \\
+    && \text{  where } c \text{ is an unknown constant}
+\end{eqnarray}
 
 ** Two-group mixture model
 #+ATTR_HTML: :align left
@@ -503,68 +341,45 @@ In large-scale simultaneous hypothesis testing, the theoretical null may be defi
 - or failed mathematical assumptions (e.g. asymptotic approximation).
 #+ATTR_HTML: :align left :style font-size:90%
  Fortunately, in large-scale simultaneous testing, the parallel structure allows the estimation of an empirical null distribution, via empirical Bayes, from the own data of the study. 
-* iDEG for negative binomial distributed RNA-Seq data
-
-- Model RNA-Seq data with negative binomial distribution
-- VST for negative binomial distribution
-- Assumptions and approximation
-- Estimate $\scriptsize{\delta_g}$
-
-** Model RNA-Seq data with negative binomial distribution
-#+ATTR_HTML: :align left :style font-size:90%
-Parameter $\delta_{g}$ in negative binomial distribution accounts for the overdispersion. 
-
-#+ATTR_HTML: :style font-size:90%
-\begin{eqnarray*}
-    P(y_{gd} | \mu_{gd}, \delta_g)  &=& 
-    (1 + \delta_{g}\mu_{gd})^{-1/\delta_{g}} \frac{\Gamma(y_{gd} + 1/\delta_{g})}{y_{gd}!\Gamma(1/\delta_{g})} \big(\frac{\delta_{g}\mu_{gd}}{1 + \delta_{g}\mu_{gd}}\big)^{y_{gd}} \nonumber \\
-    &&\quad y_{gd}  = 0,1,\cdots\; \quad g=1, \cdots, G; \quad d= 1,2 \label{eq:nb}\\
-  E(Y_{gd}) &=& \mu_{gd}\\
-  Var(Y_{gd}) &=& \mu_{gd} + \delta_{g}\mu_{gd}^{2}\label{eq:nbVar}
-\end{eqnarray*}
-
-** VST for negative binomial distribution
-@@html:<br><br>@@
-#+ATTR_HTML: :style font-size:90%
-\begin{equation*}
-  \label{eq:NBvst}
-  h_{nb}(Y_{gd}) = \frac{1}{\sqrt{\delta_{g}}}sinh^{-1}\sqrt{Y_{gd} \delta_{g}} \overset{\cdot}{\sim} N(\mu=\frac{1}{\sqrt{\delta_{g}}}sinh^{-1}\sqrt{\mu_{gd} \delta_{g}}, \sigma^{2} = \frac{1}{4})
-\end{equation*}
-
-** Assumptions and approximation
-
-  - We assume $\delta_{g1} = \delta_{g2} = \delta_{g}$ and $\delta_{g}$ is a smooth function of the expression mean $\mu_{g}$. Consequently, genes with the same $\mu_{g}$ follow the same distribution.
-  - We make an approximation by pooling genes with close expression means to estimate $\delta_{g}$.  Specifically,   
-#+ATTR_HTML: :style font-size:80%
-\begin{eqnarray*}
-    && Y_{gd} \overset{\cdot}{\sim} NB(\mu_w,\delta_w) \nonumber\\
-    && \qquad \forall g \in \{\text{null genes in }w^{th} \text{window}\}\\
-    && \qquad  d = 1,2      
-\end{eqnarray*}
-
-  - We assume the majority of the genes are null genes, and estimate $\mu_{w}$ and $\sigma^{2}_{w}$ for each window by outlier robust estimators, median and MAD, respectively. 
-
-** Estimate $\scriptsize{\delta_g}$
-#+ATTR_HTML: :align left
-With the estimated $\hat{\mu}_{w}$ and $\hat{\delta}_{w}$ from each window, we fit a smooth spline of $\hat{\mu}_{w}$ and $\hat{\delta}_{w}$ by minimizing the penalized residual sum of squares:
-
-#+ATTR_HTML: :style font-size:90%
-\begin{equation*}
-  \label{eq:smoothFit}
-  RSS(f,\mu) =   \sum_{w=1}^{W} (\hat{\delta}_w-f(\hat{\mu}_w))^2 + \mu\int f^{''}(\hat{\mu}_w)^2 dt
-\end{equation*}
-#+ATTR_HTML: :align left
-Then, we we estimate $\delta_g$ for each gene,
-\begin{equation}
-  \label{eq:prediction}
-\hat{\delta}_g = \hat{\delta}_w' = q(\hat{\mu}_w) \qquad \forall g \in \{g : Gene_g \in w^{th}\text{ window}\}
-\end{equation}
 
 
 * Numerical studies
 - Procedure
 - Method evaluation 
 - Sensitivity Analysis
+
+** Simulate a single-subject dataset
+#+ATTR_HTML: :align left
+Simulate a pair of transcriptomes:
+#+ATTR_HTML:  :style font-size:90%
+\begin{eqnarray*}
+  Y_{g1} &\sim& \text{NB}(\mu_{g1}, \delta_{g})\\
+  Y_{g2} &\sim& \text{NB}(\mu_{g2}, \delta_{g})\\ 
+  \delta_{g} &=& 0.005 + 9/(\mu_{g1}+100) \\
+P(\mu_{g1}) &=& \frac{1}{500} e^{-\frac{1}{500} \mu_{g1}} \quad \quad g = 1,\cdots,20\,000
+ \end{eqnarray*}
+
+
+** Simulate a single-subject dataset
+
+#+BEGIN_EXPORT html
+<div align="right"> 
+<font style="background-color:lightgray"> <i> Cont'd </i> </font>
+</div>
+#+END_EXPORT
+
+#+ATTR_HTML: :style font-size:90% 
+\begin{eqnarray*}
+\mu_{g2} &=& \begin{cases}
+\mu_{g1}  & \text{if }g \in \overline{\mathcal{G}},\\
+d^{s}\mu_{g1}   & \text{if }g \in \mathcal{G}.\end{cases}\\
+&&\text{where $\mathcal{G}$ is a random subset of set $\{1,2, \cdots, 20000\}$}\\
+\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.1 \label{eq:DEG-pct}\\
+d  &=& \frac{\mu_{g1} + n \sqrt{\mu_{g1}}}{\mu_{g1}}\label{eq:DEG-fold-change}\\
+s &=& \begin{cases} 1 &\text{with probability of }0.5,\\
+-1 &\text{with probability of }0.5.\end{cases} \label{eq:fold-change-direction}\\
+n &\sim& \mathcal{N}(9,1)
+\end{eqnarray*}
 
 ** Procedure
 - **Step 1:** Simulate one single-subject datasets (Poisson assumption or negative binomial assumption), which contains $p \%$ DEG. 
@@ -585,53 +400,30 @@ F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}
 
 ** Method evaluation 
 
-- Poisson case:
-
-|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
-| DEG% | Method | Precision       | Recall (TPR)    | FPR             | F1              | Predictions       |
-|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
-|   5% | iDEG   | 0.987 (4.8e-03) | 0.879 (1.3e-02) | 0.001 (2.3e-04) | 0.929 (7.1e-03) | 890.46 (1.5e+01)  |
-|      | edgeR  | 0.918 (8.2e-03) | 0.934 (8.3e-03) | 0.004 (4.8e-04) | 0.926 (6.2e-03) | 1017.52 (1.2e+01) |
-|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
-|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
-|  10% | iDEG   | 0.988 (3.3e-03) | 0.904 (8.1e-03) | 0.001 (3.4e-04) | 0.944 (3.9e-03) | 1829.1 (2.0e+01)  |
-|      | edgeR  | 0.923 (5.2e-03) | 0.95 (5.1e-03)  | 0.009 (6.5e-04) | 0.936 (3.4e-03) | 2059.95 (1.7e+01) |
-|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
-|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
-|  15% | iDEG   | 0.991 (2.4e-03) | 0.913 (7.5e-03) | 0.001 (4.0e-04) | 0.95 (3.6e-03)  | 2764.26 (2.7e+01) |
-|      | edgeR  | 0.926 (5.0e-03) | 0.959 (3.4e-03) | 0.014 (1.0e-03) | 0.942 (3.0e-03) | 3105.66 (2.1e+01) |
-|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
-|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
-|  20% | iDEG   | 0.991 (2.3e-03) | 0.921 (6.3e-03) | 0.002 (5.4e-04) | 0.955 (2.9e-03) | 3716.23 (3.1e+01) |
-|      | edgeR  | 0.93 (4.1e-03)  | 0.963 (3.1e-03) | 0.018 (1.1e-03) | 0.946 (2.7e-03) | 4143.99 (2.2e+01) |
-|      | DESeq  | NaN (NA)        | 0 (0.0e+00)     | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)       |
-|------+--------+-----------------+-----------------+-----------------+-----------------+-------------------|
-
-#+ATTR_html: :style font-size:66% :align left
-Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examines tens of thousands of genes in a high-throughput manner.
 
 ** Method evaluation 
-- negative binomial case
 
-|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-| DEG.. | Method | Precision       | Recall.TPR      | FPR             | F1              | Predictions        |
-|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-|    5% | iDEG   | 0.93 (1.6e-02)  | 0.679 (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
-|       | edgeR  | 0.39 (8.4e-03)  | 0.948 (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
-|       | DESeq  | 1 (1.3e-03)     | 0.202 (3.5e-02) | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
-|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-|   10% | iDEG   | 0.946 (9.8e-03) | 0.734 (2.1e-02) | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
-|       | edgeR  | 0.527 (7.7e-03) | 0.956 (4.7e-03) | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
-|       | DESeq  | 1 (0.0e+00)     | 0.001 (1.0e-03) | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
-|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-|   15% | iDEG   | 0.955 (7.1e-03) | 0.767 (1.6e-02) | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
-|       | edgeR  | 0.608 (6.8e-03) | 0.96 (3.6e-03)  | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
-|       | DESeq  | 1 (0.0e+00)     | 0 (4.8e-05)     | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
-|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
-|   20% | iDEG   | 0.961 (5.8e-03) | 0.787 (1.4e-02) | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
-|       | edgeR  | 0.666 (5.7e-03) | 0.964 (3.0e-03) | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
-|       | DESeq  | 1 (0.0e+00)     | 0 (7.9e-06)     | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
-|-------+--------+-----------------+-----------------+-----------------+-----------------+--------------------|
+|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+| DEG.. | Method | Precision        | Recall.TPR      | FPR             | F1              | Predictions        |
+|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+|    5% | iDEG   | *0.93* (1.6e-02) | *0.679* (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
+|       | edgeR  | *0.39* (8.4e-03) | *0.948* (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
+|       | DESeq  | 1 (1.3e-03)      | 0.202 (3.5e-02) | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
+|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+|   10% | iDEG   | 0.946 (9.8e-03)  | 0.734 (2.1e-02) | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
+|       | edgeR  | 0.527 (7.7e-03)  | 0.956 (4.7e-03) | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
+|       | DESeq  | 1 (0.0e+00)      | 0.001 (1.0e-03) | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
+|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+|   15% | iDEG   | 0.955 (7.1e-03)  | 0.767 (1.6e-02) | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
+|       | edgeR  | 0.608 (6.8e-03)  | 0.96 (3.6e-03)  | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
+|       | DESeq  | 1 (0.0e+00)      | 0 (4.8e-05)     | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
+|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+|   20% | iDEG   | 0.961 (5.8e-03)  | 0.787 (1.4e-02) | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
+|       | edgeR  | 0.666 (5.7e-03)  | 0.964 (3.0e-03) | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
+|       | DESeq  | 1 (0.0e+00)      | 0 (7.9e-06)     | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
+|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+#+ATTR_html: :style font-size:66% :align left
+Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examines tens of thousands of genes in a high-throughput manner.
 
 ** Sensitivity Analysis
 
@@ -650,6 +442,9 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
  - Simulate single-subject datasets with a series of percentages of DEG. 
 
  [[./Figures/fig-sensitivity-highDEG.png]]
+
+* Take home message
+We developed a new and effective method to identify differentially expressed genes from two transcriptomes of a single patient.    
 
 * Acknowledgements
 
@@ -670,19 +465,19 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
 
 
 <div class="rightcol">
-<br>
-<img src="http://u.arizona.edu/~haiquan/Haiquan_tucson.jpg"  style="float:left;width:30%;height:38%;"/> 
-<p > Haiquan Li</p>
-<br>
-<br>
-<img src="http://cb2.uahs.arizona.edu/sites/default/files/styles/1x_smartphone/public/201609208_berghout_joanne_deptofmed-20.jpg?itok=tcjyq9Ci&timestamp=1490681347" style="float:left;width:30%;height:38%;" align="left"/>
-<p > Joanne Berghout </p>
 
 <br>
+<ul>
+<li> Haiquan Li</li>
+<li> Haiquan LiJoanne Berghout</li>
+<li> Grant Schissler</li>
+<li> Yuan Shang</li>
+</ul>
 <br>
-<img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/7/005/059/11e/383a2fd.jpg" style="float:left;width:30%;height:38%;" align="left"/>
-<p > Grant Schissler </p>
-
+<br>
+<img src="https://www.nsf.gov/images/logos/nsf1.jpg"  height="130" width="130"/> <font color="white">spa</font>
+<img src="https://www.nih.gov/sites/default/files/styles/sidebar_media_breakpoint-small/public/about-nih/2012-logo.png?itok=WGmazXcU"  height="130" width="130"/>
+<img src="http://grad.arizona.edu/ui/images/ua_lockups/gidp-lockup-full-white.png" height="100" width="400" style="background-color:gray" />
 </div>
 
 </div>
