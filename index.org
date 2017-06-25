@@ -375,7 +375,7 @@ P(\mu_{g1}) &=& \frac{1}{500} e^{-\frac{1}{500} \mu_{g1}} \quad \quad g = 1,\cdo
 \mu_{g1}  & \text{if }g \in \overline{\mathcal{G}},\\
 d^{s}\mu_{g1}   & \text{if }g \in \mathcal{G}.\end{cases}\\
 &&\text{where $\mathcal{G}$ is a random subset of set $\{1,2, \cdots, 20000\}$}\\
-\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.1 \label{eq:DEG-pct}\\
+\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.05R \label{eq:DEG-pct}\\
 d  &=& \frac{\mu_{g1} + n \sqrt{\mu_{g1}}}{\mu_{g1}}\label{eq:DEG-fold-change}\\
 s &=& \begin{cases} 1 &\text{with probability of }0.5,\\
 -1 &\text{with probability of }0.5.\end{cases} \label{eq:fold-change-direction}\\
@@ -384,8 +384,8 @@ n &\sim& \mathcal{N}(9,1)
 
 ** Procedure
 - **Step 1:** Simulate one single-subject datasets (Poisson assumption or negative binomial assumption), which contains $p \%$ DEG. 
-- **Step 2:** Conduct iDEG, DESeq, edgeR, and DEGseq.
-- **Step 3:** Compute F1 score for each method,
+- **Step 2:** Conduct iDEG, edgeR, DESeq, and DEGseq.
+- **Step 3:** Compute an F1 score for each method,
 #+ATTR_HTML: :style font-size:90%
 \begin{equation*}
 F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}   
@@ -396,33 +396,41 @@ F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}
 
 ** Method evaluation 
 
-#+ATTR_HTML: :width 85%
-[[./Figures/fig-numerical-study.png]]
+#+BEGIN_SRC R :exports none :results graphics :file ./Figures/fig-F1.png :session width :res 120 :height 550 :width 600
+load('~/Dropbox/Qike/adaptive_cutoff/Figures/Fig_numericalStudy/Results/fig-num-study2.RData', verbose = T)
+p_num_study + theme_bw(base_size = 15) + 
+theme(legend.position = 'top',
+ strip.background = element_blank(),
+       strip.text = element_blank())
+#+END_SRC
+
+#+RESULTS:
+[[file:./Figures/fig-F1.png]]
+
+
+[[./Figures/fig-F1.png]]
 
 ** Method evaluation 
 
-
-** Method evaluation 
-
-|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
-| DEG.. | Method | Precision        | Recall.TPR      | FPR             | F1              | Predictions        |
-|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
-|    5% | iDEG   | *0.93* (1.6e-02) | *0.679* (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
-|       | edgeR  | *0.39* (8.4e-03) | *0.948* (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
-|       | DESeq  | 1 (1.3e-03)      | 0.202 (3.5e-02) | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
-|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
-|   10% | iDEG   | 0.946 (9.8e-03)  | 0.734 (2.1e-02) | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
-|       | edgeR  | 0.527 (7.7e-03)  | 0.956 (4.7e-03) | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
-|       | DESeq  | 1 (0.0e+00)      | 0.001 (1.0e-03) | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
-|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
-|   15% | iDEG   | 0.955 (7.1e-03)  | 0.767 (1.6e-02) | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
-|       | edgeR  | 0.608 (6.8e-03)  | 0.96 (3.6e-03)  | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
-|       | DESeq  | 1 (0.0e+00)      | 0 (4.8e-05)     | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
-|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
-|   20% | iDEG   | 0.961 (5.8e-03)  | 0.787 (1.4e-02) | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
-|       | edgeR  | 0.666 (5.7e-03)  | 0.964 (3.0e-03) | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
-|       | DESeq  | 1 (0.0e+00)      | 0 (7.9e-06)     | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
-|-------+--------+------------------+-----------------+-----------------+-----------------+--------------------|
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+| DEG.. | Method | Precision                                        | Recall.TPR                                        | FPR             | F1              | Predictions        |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|    5% | iDEG   | @@html:<font color="red">0.93</font>@@ (1.6e-02) | @@html:<font color="red">0.679</font>@@ (2.5e-02)          | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
+|       | edgeR  | @@html:<font color="red">0.39</font>@@ (8.4e-03) | @@html:<font color="red">0.948</font>@@ (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
+|       | DESeq  | 1 (1.3e-03)                                      | 0.202 (3.5e-02)                                   | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|   10% | iDEG   | 0.946 (9.8e-03)                                  | 0.734 (2.1e-02)                                   | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
+|       | edgeR  | 0.527 (7.7e-03)                                  | 0.956 (4.7e-03)                                   | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
+|       | DESeq  | 1 (0.0e+00)                                      | 0.001 (1.0e-03)                                   | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|   15% | iDEG   | 0.955 (7.1e-03)                                  | 0.767 (1.6e-02)                                   | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
+|       | edgeR  | 0.608 (6.8e-03)                                  | 0.96 (3.6e-03)                                    | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
+|       | DESeq  | 1 (0.0e+00)                                      | 0 (4.8e-05)                                       | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|   20% | iDEG   | 0.961 (5.8e-03)                                  | 0.787 (1.4e-02)                                   | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
+|       | edgeR  | 0.666 (5.7e-03)                                  | 0.964 (3.0e-03)                                   | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
+|       | DESeq  | 1 (0.0e+00)                                      | 0 (7.9e-06)                                       | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
 #+ATTR_html: :style font-size:66% :align left
 Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examines tens of thousands of genes in a high-throughput manner.
 
@@ -445,6 +453,8 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
  [[./Figures/fig-sensitivity-highDEG.png]]
 
 * Take home message
+@@html:<br>@@
+#+ATTR_HTML: :align left :style background-color:lightgray;font-size:120% 
 We developed a new and effective method to identify differentially expressed genes from two transcriptomes of a single patient.    
 
 * Acknowledgements
