@@ -60,7 +60,7 @@
 #+END_SRC
 
 
-** iDEG: a single-subject method for assessing gene differential expression from two transcriptomes of an individual
+** iDEG: a new single-subject method for assessing gene differential expression from two transcriptomes of an individual
 
     #+BEGIN_EXPORT html
     <hr class="shadow">
@@ -80,7 +80,7 @@ qike.li@gmail.com
 #+ATTR_HTML: :align center :height 110px
 [[./Figures/Lussier.png]]
 
-** Outline
+* Outline
 @@html:<br>@@
 - Background  
 - Methodology--iDEG
@@ -158,8 +158,8 @@ print(table_tnbc_A2C9_print, type = 'org')
 @@html:<br><br>@@
 @@html:<div style="background-color:lightgray;">@@
 #+ATTR_HTML: :align left
-Main Challenges in Single-subject analysis:
- - There is @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
+Main challenges in single-subject analysis:
+ - There are @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
 # @@html:</div>@@
 
 #+REVEAL: split
@@ -172,8 +172,8 @@ Main Challenges in Single-subject analysis:
 
 @@html:<div style="background-color:lightgray;">@@
 #+ATTR_HTML: :align left
-Main Challenges in Single-subject analysis:
-- There is @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
+Main challenges in single-subject analysis:
+- There are @@html:<font color="red">@@NO@@html:</font>@@  within subject replicates.
   - Different genes have different variances. 
   - For each gene, we have only two numbers to work with.
 
@@ -305,8 +305,8 @@ Suppose $G$ genes are measured in the RNA-Seq experiment, each of the genes is e
 
 #+ATTR_HTML: :style font-size:90% 
 \begin{eqnarray*}
-      \pi_{0} = Pr\{\mbox{gene $g$ is null}\} & \mbox{density is $f_{0}(z)$ if null}\\
-    \pi_{1} = Pr\{\mbox{gene $g$ is DEG}\}  & \mbox{density is $f_{1}(z)$ if DEG}
+      \pi_{0} &=& Pr\{\mbox{gene $g$ is null}\} \\
+    \pi_{1} &=& Pr\{\mbox{gene $g$ is DEG}\}
 \end{eqnarray*}
 
 #+ATTR_HTML: :align left
@@ -330,7 +330,7 @@ The local false positive rate, $fdr$, is the Bayes posterior probability that a 
 ** Two-group mixture model
 #+ATTR_HTML: :align left :style font-size:90%
 @@html:<br>@@
-$f_{0}$ corresponds to a empirical null distribution. 
+$f_{0}$ corresponds to an empirical null distribution. 
 #+ATTR_HTML: :align left :style font-size:90%
 In large-scale simultaneous hypothesis testing, the theoretical null may be deficient due to various reasons: 
 
@@ -384,7 +384,7 @@ n &\sim& \mathcal{N}(9,1)
 
 ** Procedure
 - **Step 1:** Simulate one single-subject datasets (Poisson assumption or negative binomial assumption), which contains $p \%$ DEG. 
-- **Step 2:** Conduct iDEG, edgeR, DESeq, and DEGseq.
+- **Step 2:** Conduct iDEG, edgeR[fn:1:], DESeq[fn:2:], and DEGseq[fn:3:].
 - **Step 3:** Compute an F1 score for each method,
 #+ATTR_HTML: :style font-size:90%
 \begin{equation*}
@@ -393,6 +393,13 @@ F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}
 - **Step 4:** Repeat Step1-Step3 for 1000 times
 - **Step 5:** Calculate the arithmetic mean and standard deviation of the 1000 $F_{1}$ resulted from each method.
 - **Step 6:** Change the value of $p$, repeat Step 1-Step 5
+
+#+BEGIN_EXPORT html
+<div class="reference"> 
+<font ><hr></hr><sup>1. Robinson, M. D. et. al., 2010, <i>Bioinformatics</i>;  2. Anders, S. et. al., 2010, <i> Genome biology </i>;<br /> 3. Wang, L. et al., 2009, <i>Bioinformatics</i></sup> </font>
+</div>
+#+END_EXPORT
+
 
 ** Method evaluation 
 
@@ -412,26 +419,47 @@ theme(legend.position = 'top',
 
 ** Method evaluation 
 
+#+ATTR_HTML: :table rules="groups"
+| DEG%  | Method | Precision                                        | Recall.TPR                                        | FPR             | F1              | Predictions        |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
-| DEG.. | Method | Precision                                        | Recall.TPR                                        | FPR             | F1              | Predictions        |
+|    5% | iDEG   | @@html:<font color="red">0.93</font>@@ (1.6e-02) | @@html:<font color="red">0.679</font>@@ (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
-|    5% | iDEG   | @@html:<font color="red">0.93</font>@@ (1.6e-02) | @@html:<font color="red">0.679</font>@@ (2.5e-02)          | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
 |       | edgeR  | @@html:<font color="red">0.39</font>@@ (8.4e-03) | @@html:<font color="red">0.948</font>@@ (7.1e-03) | 0.078 (2.8e-03) | 0.552 (8.6e-03) | 2432.95 (5.4e+01)  |
-|       | DESeq  | 1 (1.3e-03)                                      | 0.202 (3.5e-02)                                   | 0 (1.4e-05)     | 0.334 (4.8e-02) | 201.589 (3.5e+01)  |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
-|   10% | iDEG   | 0.946 (9.8e-03)                                  | 0.734 (2.1e-02)                                   | 0.005 (9.8e-04) | 0.827 (1.2e-02) | 1552.089 (5.5e+01) |
-|       | edgeR  | 0.527 (7.7e-03)                                  | 0.956 (4.7e-03)                                   | 0.095 (2.9e-03) | 0.68 (6.6e-03)  | 3628.589 (5.4e+01) |
-|       | DESeq  | 1 (0.0e+00)                                      | 0.001 (1.0e-03)                                   | 0 (0.0e+00)     | 0.003 (2.3e-03) | 1.107 (2.0e+00)    |
+|       | DESeq  | 0.999 (2.1e-03)                                  | 0.152 (3.8e-02)                                   | 0 (1.8e-05)     | 0.262 (5.8e-02) | 152.45 (3.8e+01)   |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
-|   15% | iDEG   | 0.955 (7.1e-03)                                  | 0.767 (1.6e-02)                                   | 0.006 (1.1e-03) | 0.851 (8.9e-03) | 2409.492 (6.4e+01) |
-|       | edgeR  | 0.608 (6.8e-03)                                  | 0.96 (3.6e-03)                                    | 0.109 (3.1e-03) | 0.745 (5.2e-03) | 4735.157 (5.5e+01) |
-|       | DESeq  | 1 (0.0e+00)                                      | 0 (4.8e-05)                                       | 0 (0.0e+00)     | 0.001 (1.1e-04) | 0.02 (1.4e-01)     |
+|       | DEGseq | 0.086 (6.7e-04)                                  | 0.985 (3.9e-03)                                   | 0.549 (3.9e-03) | 0.159 (1.2e-03) | 11408.61 (7.4e+01) |
+|   10% | iDEG   | 0.945 (1.1e-02)                                  | 0.708 (2.2e-02)                                   | 0.005 (1.1e-03) | 0.809 (1.2e-02) | 1500.32 (5.9e+01)  |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
-|   20% | iDEG   | 0.961 (5.8e-03)                                  | 0.787 (1.4e-02)                                   | 0.008 (1.3e-03) | 0.865 (7.5e-03) | 3275.416 (7.3e+01) |
-|       | edgeR  | 0.666 (5.7e-03)                                  | 0.964 (3.0e-03)                                   | 0.121 (3.1e-03) | 0.788 (4.1e-03) | 5791.611 (5.2e+01) |
-|       | DESeq  | 1 (0.0e+00)                                      | 0 (7.9e-06)                                       | 0 (0.0e+00)     | 0 (0.0e+00)     | 0.001 (3.2e-02)    |
+|       | edgeR  | 0.447 (6.2e-03)                                  | 0.96 (4.3e-03)                                    | 0.132 (3.3e-03) | 0.61 (6.0e-03)  | 4296.19 (6.0e+01)  |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
-#+ATTR_html: :style font-size:66% :align left
+|       | DESeq  | 1 (0.0e+00)                                      | 0 (5.2e-04)                                       | 0 (0.0e+00)     | 0.002 (1.4e-03) | 0.44 (1.0e+00)     |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | DEGseq | 0.165 (1.1e-03)                                  | 0.986 (2.5e-03)                                   | 0.556 (4.2e-03) | 0.282 (1.6e-03) | 11974.99 (7.6e+01) |
+|   15% | iDEG   | 0.953 (7.0e-03)                                  | 0.746 (1.6e-02)                                   | 0.006 (1.1e-03) | 0.837 (9.1e-03) | 2348.99 (5.8e+01)  |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | edgeR  | 0.537 (5.7e-03)                                  | 0.964 (3.7e-03)                                   | 0.147 (3.4e-03) | 0.69 (4.8e-03)  | 5384.34 (5.9e+01)  |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | DESeq  | 1 (NA)                                           | 0 (3.3e-05)                                       | 0 (0.0e+00)     | 0.001 (NA)      | 0.01 (1.0e-01)     |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | DEGseq | 0.235 (1.4e-03)                                  | 0.986 (2.1e-03)                                   | 0.565 (4.2e-03) | 0.38 (1.9e-03)  | 12562.45 (7.3e+01) |
+|   20% | iDEG   | 0.962 (4.6e-03)                                  | 0.763 (1.3e-02)                                   | 0.008 (1.0e-03) | 0.851 (7.8e-03) | 3175 (6.4e+01)     |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | edgeR  | 0.602 (5.7e-03)                                  | 0.966 (2.8e-03)                                   | 0.16 (3.9e-03)  | 0.742 (4.4e-03) | 6418.81 (6.4e+01)  |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | DESeq  | NaN (NA)                                         | 0 (0.0e+00)                                       | 0 (0.0e+00)     | NaN (NA)        | 0 (0.0e+00)        |
+|-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
+|       | DEGseq | 0.299 (1.6e-03)                                  | 0.986 (2.0e-03)                                   | 0.577 (4.2e-03) | 0.459 (1.9e-03) | 13179.58 (6.8e+01) |
+
+#+REVEAL: split
+
+#+BEGIN_EXPORT html
+<div align="right"> 
+<font style="background-color:lightgray"> <i> Cont'd </i> </font>
+</div>
+#+END_EXPORT
+@@html:<br>@@
+#+ATTR_html: :style font-size:80% :align left
 Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examines tens of thousands of genes in a high-throughput manner.
 
 ** Sensitivity Analysis
