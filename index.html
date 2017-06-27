@@ -32,9 +32,9 @@
 <div class="slides">
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgbe6ba65" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org47eeb41" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgbe6ba65">iDEG: a new single-subject method for assessing gene differential expression from two transcriptomes of an individual</h3>
+<h3 id="org47eeb41">iDEG: a new single-subject method for assessing gene differential expression from two transcriptomes of an individual</h3>
 <hr class="shadow">
 <p>
 Qike Li 
@@ -70,9 +70,9 @@ qike.li@gmail.com
 </section>
 </section>
 <section>
-<section id="slide-orgc74d8d8" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org9e986c0" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h2 id="orgc74d8d8">Outline</h2>
+<h2 id="org9e986c0">Outline</h2>
 <p>
 <br>
 </p>
@@ -80,30 +80,31 @@ qike.li@gmail.com
 <li>Background</li>
 <li>Methodology&#x2013;iDEG</li>
 <li>Numerical studies</li>
+<li>Real data analysis</li>
 
 </ul>
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-org804adc5" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org5d38a56" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h2 id="org804adc5">Background</h2>
+<h2 id="org5d38a56">Background</h2>
 <ul>
 <li>Precision Medicine</li>
 <li>Single-subject analysis</li>
 <li>Example RNA-Seq quantified mRNA expression data (Single-Subject)</li>
-<li>Main Challenges</li>
 <li>Our goal</li>
+<li>Main Challenges</li>
 <li>Our solution (iDEG)</li>
 
 </ul>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org604edcd" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgb671edd" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org604edcd">Precision Medicine</h3>
+<h3 id="orgb671edd">Precision Medicine</h3>
 
 <div class="figure">
 <p><img src="./Figures/PGX.jpg" alt="PGX.jpg" align="center" />  
@@ -112,9 +113,9 @@ qike.li@gmail.com
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgd837b16" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org76359c9" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgd837b16">Single-subject analysis</h3>
+<h3 id="org76359c9">Single-subject analysis</h3>
 <p>
 <br><br>
 </p>
@@ -123,9 +124,9 @@ qike.li@gmail.com
 </p>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgabda20a" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgdde4bce" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgabda20a">Single-subject analysis</h3>
+<h3 id="orgdde4bce">Single-subject analysis</h3>
 
 <div class="figure">
 <p><img src="./Figures/single-subject-analysis2.png" alt="single-subject-analysis2.png" align="center" />
@@ -133,9 +134,9 @@ qike.li@gmail.com
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orga3f0491" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org914661d" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orga3f0491">Example RNA-Seq quantified mRNA expression data (Single-Subject)</h3>
+<h3 id="org914661d">Example RNA-Seq quantified mRNA expression data (Single-Subject)</h3>
 <p>
 <br>
 </p>
@@ -241,9 +242,31 @@ qike.li@gmail.com
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org1cad5fb" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgc848a3e" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org1cad5fb">Main Challenges</h3>
+<h3 id="orgc848a3e">Our goal</h3>
+<ul>
+<li class="fragment appear">How differentially expressed is a gene?
+<ul>
+<li>A meaningful effect size of differential expression</li>
+
+</ul></li>
+
+<li class="fragment appear">What is the uncertainty of the measurement?
+<ul>
+<li>A probability of gene differential expression.</li>
+
+</ul></li>
+
+</ul>
+<p>
+<br>
+</p>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org27cd3ed" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org27cd3ed">Main Challenges</h3>
 <p>
 <br><br>
 <div style="background-color:lightgray;">
@@ -268,9 +291,9 @@ Main challenges in single-subject analysis:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org43123bd" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orga19d816" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org43123bd">Main Challenges</h3>
+<h3 id="orga19d816">Main Challenges</h3>
 <p>
 <div style="background-color:lightgray;">
 </p>
@@ -289,32 +312,9 @@ Main challenges in single-subject analysis:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org193b0c9" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgf398949" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org193b0c9">Our goal</h3>
-<ul>
-<li class="fragment appear">How differentially expressed is a gene?
-<ul>
-<li>A meaningful effect size of differential expression</li>
-
-</ul></li>
-
-<li class="fragment appear">What is the uncertainty of the measurement?
-<ul>
-<li>A probability of gene differential expression.</li>
-
-</ul></li>
-
-</ul>
-<p>
-<br>
-</p>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org02e9e30" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
-<div class="slide-header"></div>
-<h3 id="org02e9e30">Our solution (iDEG)</h3>
+<h3 id="orgf398949">Our solution (iDEG)</h3>
 <p>
 <br>
 </p>
@@ -327,9 +327,9 @@ Main challenges in single-subject analysis:
 </section>
 </section>
 <section>
-<section id="slide-orge8bfef4" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgae03c17" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h2 id="orge8bfef4">Methodology&#x2013;iDEG</h2>
+<h2 id="orgae03c17">Methodology&#x2013;iDEG</h2>
 <p>
 <br>
 </p>
@@ -341,9 +341,9 @@ Main challenges in single-subject analysis:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgc53e7fd" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org703a18e" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgc53e7fd">Data transformation</h3>
+<h3 id="org703a18e">Data transformation</h3>
 
 <div class="figure">
 <p><img src="./Figures/fig-beforeVST.png" alt="fig-beforeVST.png" />
@@ -352,9 +352,9 @@ Main challenges in single-subject analysis:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org041b311" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgbcdea97" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org041b311">Data transformation</h3>
+<h3 id="orgbcdea97">Data transformation</h3>
 
 <div class="figure">
 <p><img src="./Figures/fig-trans.png" alt="fig-trans.png" />
@@ -363,9 +363,9 @@ Main challenges in single-subject analysis:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org83f6dc5" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org4b23195" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org83f6dc5">Data transformation</h3>
+<h3 id="org4b23195">Data transformation</h3>
 <p>
 <br><br>
 </p>
@@ -388,9 +388,9 @@ Under null hypothesis:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org811a3c9" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org715e077" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org811a3c9">Two-group mixture model</h3>
+<h3 id="org715e077">Two-group mixture model</h3>
 <p align="left">
 Suppose \(G\) genes are measured in the RNA-Seq experiment, each of the genes is either null or differentially expressed with prior probabilities \(\pi_{0}\) or \(\pi_{1} = 1-\pi_{0}\). And the density function of \(z_{g}\) is either \(f_{0}(z)\) or \(f_{1}(z)\).
 </p>
@@ -416,9 +416,9 @@ The marginal mixture density is:
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgbee6704" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org0958686" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgbee6704">Two-group mixture model</h3>
+<h3 id="org0958686">Two-group mixture model</h3>
 <p align="left">
 The local false positive rate, \(fdr\), is the Bayes posterior probability that a gene \(g\) is a null gene given \(z_{g}\): 
 <br><br>
@@ -433,11 +433,10 @@ The local false positive rate, \(fdr\), is the Bayes posterior probability that 
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org9e96567" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orge796034" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org9e96567">Two-group mixture model</h3>
+<h3 id="orge796034">Two-group mixture model</h3>
 <p align="left" style="font-size:90%">
-<br>
 \(f_{0}\) corresponds to an empirical null distribution. 
 </p>
 <p align="left" style="font-size:90%">
@@ -461,9 +460,9 @@ Fortunately, in large-scale simultaneous testing, the parallel structure allows 
 </section>
 </section>
 <section>
-<section id="slide-org796241f" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgea0e193" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h2 id="org796241f">Numerical studies</h2>
+<h2 id="orgea0e193">Numerical studies</h2>
 <ul>
 <li>Simulate a single-subject dataset</li>
 <li>Procedure</li>
@@ -474,9 +473,9 @@ Fortunately, in large-scale simultaneous testing, the parallel structure allows 
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org8bd7ce4" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org8c9a853" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org8bd7ce4">Simulate a single-subject dataset</h3>
+<h3 id="org8c9a853">Simulate a single-subject dataset</h3>
 <p align="left">
 Simulate a pair of transcriptomes:
 </p>
@@ -493,9 +492,9 @@ P(\mu_{g1}) &=& \frac{1}{500} e^{-\frac{1}{500} \mu_{g1}} \quad \quad g = 1,\cdo
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgfdd902f" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orga9e46b2" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgfdd902f">Simulate a single-subject dataset</h3>
+<h3 id="orga9e46b2">Simulate a single-subject dataset</h3>
 <div align="right"> 
 <font style="background-color:lightgray"> <i> Cont'd </i> </font>
 </div>
@@ -506,7 +505,7 @@ P(\mu_{g1}) &=& \frac{1}{500} e^{-\frac{1}{500} \mu_{g1}} \quad \quad g = 1,\cdo
 \mu_{g1}  & \text{if }g \in \overline{\mathcal{G}},\\
 d^{s}\mu_{g1}   & \text{if }g \in \mathcal{G}.\end{cases}\\
 &&\text{where $\mathcal{G}$ is a random subset of set $\{1,2, \cdots, 20000\}$}\\
-\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.05R \label{eq:DEG-pct}\\
+\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.05 \label{eq:DEG-pct}\\
 d  &=& \frac{\mu_{g1} + n \sqrt{\mu_{g1}}}{\mu_{g1}}\label{eq:DEG-fold-change}\\
 s &=& \begin{cases} 1 &\text{with probability of }0.5,\\
 -1 &\text{with probability of }0.5.\end{cases} \label{eq:fold-change-direction}\\
@@ -517,11 +516,11 @@ n &\sim& \mathcal{N}(9,1)
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org2bc49b9" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgd204cee" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org2bc49b9">Procedure</h3>
+<h3 id="orgd204cee">Procedure</h3>
 <ul>
-<li><b><b>Step 1:</b></b> Simulate one single-subject datasets (Poisson assumption or negative binomial assumption), which contains \(p \%\) DEG.</li>
+<li><b><b>Step 1:</b></b> Simulate one single-subject datasets, which contains \(p \%\) DEG.</li>
 <li><b><b>Step 2:</b></b> Conduct iDEG, edgeR<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>, DESeq<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>, and DEGseq<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>.</li>
 <li><b><b>Step 3:</b></b> Compute an F1 score for each method,</li>
 
@@ -546,9 +545,9 @@ F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orge91b0c2" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org9c95082" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orge91b0c2">Method evaluation</h3>
+<h3 id="org9c95082">Method evaluation</h3>
 
 <div class="figure">
 <p><img src="./Figures/fig-F1.png" alt="fig-F1.png" />
@@ -557,9 +556,9 @@ F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgbe1d1c4" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org7986a05" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orgbe1d1c4">Method evaluation</h3>
+<h3 id="org7986a05">Method evaluation</h3>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" table="rules=&quot;groups&quot;">
 
 
@@ -583,7 +582,7 @@ F_{1} = \frac{2\times Precision \times Recall}{Precision + Recall}
 <th scope="col" class="org-right">DEG%</th>
 <th scope="col" class="org-left">Method</th>
 <th scope="col" class="org-left">Precision</th>
-<th scope="col" class="org-left">Recall.TPR</th>
+<th scope="col" class="org-left">Recall(TPR)</th>
 <th scope="col" class="org-left">FPR</th>
 <th scope="col" class="org-left">F1</th>
 <th scope="col" class="org-left">Predictions</th>
@@ -779,9 +778,9 @@ Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, i
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org6488fda" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org34bcf93" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org6488fda">Sensitivity Analysis</h3>
+<h3 id="org34bcf93">Sensitivity Analysis</h3>
 <p align="left">
 Our experience indicates that without making assumptions on RNA-Seq data, it is difficult to construct suitable statistical inferences for a single-subject dataset. Nonetheless we test the two main assumptions we make:
 </p>
@@ -795,9 +794,9 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org4bfe99a" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-org4919314" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="org4bfe99a">Sensitivity Analysis</h3>
+<h3 id="org4919314">Sensitivity Analysis</h3>
 <ul>
 <li>Draw  dispersion parameter \(\delta_{g}\) from a uniform distribution \(\text{unif}(0.001, 0.1)\).</li>
 
@@ -810,9 +809,9 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orge153100" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgf890c96" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h3 id="orge153100">Sensitivity Analysis</h3>
+<h3 id="orgf890c96">Sensitivity Analysis</h3>
 <ul>
 <li>Simulate single-subject datasets with a series of percentages of DEG.</li>
 
@@ -828,9 +827,136 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
 </section>
 </section>
 <section>
-<section id="slide-org5ea7880" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orga15c894" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h2 id="org5ea7880">Take home message</h2>
+<h2 id="orga15c894">Real data analysis</h2>
+<ul>
+<li>Data</li>
+<li>iDEG result</li>
+<li>Some interesting genes</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orge312e45" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orge312e45">Data</h3>
+<p align="left">
+A transcriptome of tumor sample and a transcriptome of surrounding healthy sample of an African American woman with Triple negative breast cancer (TNBC). 
+</p>
+
+<p align="left" style="font-size:85%">
+TNBC is a subtype of breast cancer that has poor prognosis and considerable heterogeneity. It disproportionately affects women with African origin (Dietze et al., 2015). Personalized treatment may be successful for an African American TNBC patient if one could discover a set of her specific DEG and match some of these DEG to the targets of a therapeutic drug.
+</p>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org93ea457" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org93ea457">iDEG result</h3>
+<table id="orgfa311d3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 2:</span> The 10 top-hit (smallest local fdr) differentially expressed genes.</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Gene</th>
+<th scope="col" class="org-right">local_fdr</th>
+<th scope="col" class="org-right">Z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">ADIPOQ</td>
+<td class="org-right">2.85e-34</td>
+<td class="org-right">-11.17</td>
+</tr>
+
+<tr>
+<td class="org-left">PLA2G2A</td>
+<td class="org-right">2.85e-34</td>
+<td class="org-right">-11.65</td>
+</tr>
+
+<tr>
+<td class="org-left">PI16</td>
+<td class="org-right">1.15e-33</td>
+<td class="org-right">-10.78</td>
+</tr>
+
+<tr>
+<td class="org-left">LEP</td>
+<td class="org-right">2.25e-33</td>
+<td class="org-right">-10.70</td>
+</tr>
+
+<tr>
+<td class="org-left">SFTPB</td>
+<td class="org-right">1.44e-32</td>
+<td class="org-right">-10.59</td>
+</tr>
+
+<tr>
+<td class="org-left">IL33</td>
+<td class="org-right">4.24e-31</td>
+<td class="org-right">-10.36</td>
+</tr>
+
+<tr>
+<td class="org-left">TUSC5</td>
+<td class="org-right">6.74e-31</td>
+<td class="org-right">-10.32</td>
+</tr>
+
+<tr>
+<td class="org-left">CSF3</td>
+<td class="org-right">2.89e-29</td>
+<td class="org-right">-10.04</td>
+</tr>
+
+<tr>
+<td class="org-left">COL6A6</td>
+<td class="org-right">3.24e-29</td>
+<td class="org-right">-10.04</td>
+</tr>
+
+<tr>
+<td class="org-left">CCL21</td>
+<td class="org-right">1.99e-28</td>
+<td class="org-right">-9.90</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-right">&#x2026;</td>
+<td class="org-right">&#x2026;</td>
+</tr>
+</tbody>
+</table>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgeb59476" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgeb59476">Some interesting genes</h3>
+<ul style="font-size:65%">
+<li><b>ADIPOQ</b> &amp; <b>LEP</b>: Adiponectin (gene product of gene ADIPOQ) and leptin (gene product of LEP) are considered as mediators for the association of breast cancer with obesity, which is a major risk factor for breast cancer (Nalabolu et al., 2014; Grossmann et al., 2010).</li>
+<li><b>PLA2G2A</b>: Although PLA2G2A has not been extensively studied for breast cancer, many studies have shown that it inhibits invasion and metastasis of gastric and colon cancer (Ganesan et al., 2008; Movahedian et al., 2016; Fijneman et al., 2009) and may predict survival (Xing et al., 2011).</li>
+<li><b>TUSC5</b>: Bubnov et al. (2012) has demonstrated the down-regulation of TUSC5 induced by DNA methylation in breast cancer. In contrast to mutated genes, DNA methylation is reversible.</li>
+
+</ul>
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgd12481c" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgd12481c">Take home message</h2>
 <p>
 <br>
 </p>
@@ -842,9 +968,9 @@ We developed a new and effective method to identify differentially expressed gen
 </section>
 </section>
 <section>
-<section id="slide-orgcbd1975" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<section id="slide-orgb894b75" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
 <div class="slide-header"></div>
-<h2 id="orgcbd1975">Acknowledgements</h2>
+<h2 id="orgb894b75">Acknowledgements</h2>
 <div class="sliderow">
 
 <div class="leftcol">

@@ -85,12 +85,13 @@ qike.li@gmail.com
 - Background  
 - Methodology--iDEG
 - Numerical studies
+- Real data analysis
 * Background
 - Precision Medicine
 - Single-subject analysis
 - Example RNA-Seq quantified mRNA expression data (Single-Subject)
-- Main Challenges
 - Our goal
+- Main Challenges
 - Our solution (iDEG)
 
 ** Precision Medicine 
@@ -154,6 +155,14 @@ print(table_tnbc_A2C9_print, type = 'org')
 #+REVEAL: split
 #+ATTR_HTML: :height 600px
 [[./Figures/giphy.gif]]
+** Our goal 
+#+ATTR_REVEAL: :frag (appear)
+ - How differentially expressed is a gene?
+   - A meaningful effect size of differential expression
+   
+ - What is the uncertainty of the measurement?
+   - A probability of gene differential expression.
+@@html:<br>@@
 ** Main Challenges
 @@html:<br><br>@@
 @@html:<div style="background-color:lightgray;">@@
@@ -200,14 +209,6 @@ p_tnbc <-
     theme_bw(base_size = base_size)
 p_tnbc
 #+END_SRC
-** Our goal 
-#+ATTR_REVEAL: :frag (appear)
- - How differentially expressed is a gene?
-   - A meaningful effect size of differential expression
-   
- - What is the uncertainty of the measurement?
-   - A probability of gene differential expression.
-@@html:<br>@@
 
 ** Our solution (iDEG)
 @@html:<br>@@
@@ -329,7 +330,6 @@ The local false positive rate, $fdr$, is the Bayes posterior probability that a 
 
 ** Two-group mixture model
 #+ATTR_HTML: :align left :style font-size:90%
-@@html:<br>@@
 $f_{0}$ corresponds to an empirical null distribution. 
 #+ATTR_HTML: :align left :style font-size:90%
 In large-scale simultaneous hypothesis testing, the theoretical null may be deficient due to various reasons: 
@@ -375,7 +375,7 @@ P(\mu_{g1}) &=& \frac{1}{500} e^{-\frac{1}{500} \mu_{g1}} \quad \quad g = 1,\cdo
 \mu_{g1}  & \text{if }g \in \overline{\mathcal{G}},\\
 d^{s}\mu_{g1}   & \text{if }g \in \mathcal{G}.\end{cases}\\
 &&\text{where $\mathcal{G}$ is a random subset of set $\{1,2, \cdots, 20000\}$}\\
-\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.05R \label{eq:DEG-pct}\\
+\frac{|\mathcal{G}|}{|\mathcal{G}| + |\overline{\mathcal{G}}|} &=& 0.05 \label{eq:DEG-pct}\\
 d  &=& \frac{\mu_{g1} + n \sqrt{\mu_{g1}}}{\mu_{g1}}\label{eq:DEG-fold-change}\\
 s &=& \begin{cases} 1 &\text{with probability of }0.5,\\
 -1 &\text{with probability of }0.5.\end{cases} \label{eq:fold-change-direction}\\
@@ -383,7 +383,7 @@ n &\sim& \mathcal{N}(9,1)
 \end{eqnarray*}
 
 ** Procedure
-- **Step 1:** Simulate one single-subject datasets (Poisson assumption or negative binomial assumption), which contains $p \%$ DEG. 
+- **Step 1:** Simulate one single-subject datasets, which contains $p \%$ DEG. 
 - **Step 2:** Conduct iDEG, edgeR[fn:1:], DESeq[fn:2:], and DEGseq[fn:3:].
 - **Step 3:** Compute an F1 score for each method,
 #+ATTR_HTML: :style font-size:90%
@@ -420,7 +420,7 @@ theme(legend.position = 'top',
 ** Method evaluation 
 
 #+ATTR_HTML: :table rules="groups"
-| DEG%  | Method | Precision                                        | Recall.TPR                                        | FPR             | F1              | Predictions        |
+| DEG%  | Method | Precision                                        | Recall(TPR)                                       | FPR             | F1              | Predictions        |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
 |    5% | iDEG   | @@html:<font color="red">0.93</font>@@ (1.6e-02) | @@html:<font color="red">0.679</font>@@ (2.5e-02) | 0.003 (7.2e-04) | 0.784 (1.5e-02) | 730.482 (3.4e+01)  |
 |-------+--------+--------------------------------------------------+---------------------------------------------------+-----------------+-----------------+--------------------|
@@ -480,6 +480,39 @@ Our experience indicates that without making assumptions on RNA-Seq data, it is 
 
  [[./Figures/fig-sensitivity-highDEG.png]]
 
+* Real data analysis
+- Data
+- iDEG result
+- Some interesting genes
+
+** Data 
+#+ATTR_HTML: :align left
+A transcriptome of tumor sample and a transcriptome of surrounding healthy sample of an African American woman with Triple negative breast cancer (TNBC). 
+
+#+ATTR_HTML: :align left :style font-size:85%
+TNBC is a subtype of breast cancer that has poor prognosis and considerable heterogeneity. It disproportionately affects women with African origin (Dietze et al., 2015). Personalized treatment may be successful for an African American TNBC patient if one could discover a set of her specific DEG and match some of these DEG to the targets of a therapeutic drug.
+** iDEG result
+#+CAPTION: The 10 top-hit (smallest local fdr) differentially expressed genes.
+#+NAME: table:tnbc
+| Gene    | local_fdr |      Z |
+|---------+-----------+--------|
+| ADIPOQ  |  2.85e-34 | -11.17 |
+| PLA2G2A |  2.85e-34 | -11.65 |
+| PI16    |  1.15e-33 | -10.78 |
+| LEP     |  2.25e-33 | -10.70 |
+| SFTPB   |  1.44e-32 | -10.59 |
+| IL33    |  4.24e-31 | -10.36 |
+| TUSC5   |  6.74e-31 | -10.32 |
+| CSF3    |  2.89e-29 | -10.04 |
+| COL6A6  |  3.24e-29 | -10.04 |
+| CCL21   |  1.99e-28 |  -9.90 |
+| ...     |       ... | ...    |
+** Some interesting genes
+
+#+ATTR_HTML: :style font-size:65%
+- *ADIPOQ* & *LEP*: Adiponectin (gene product of gene ADIPOQ) and leptin (gene product of LEP) are considered as mediators for the association of breast cancer with obesity, which is a major risk factor for breast cancer (Nalabolu et al., 2014; Grossmann et al., 2010).
+- *PLA2G2A*: Although PLA2G2A has not been extensively studied for breast cancer, many studies have shown that it inhibits invasion and metastasis of gastric and colon cancer (Ganesan et al., 2008; Movahedian et al., 2016; Fijneman et al., 2009) and may predict survival (Xing et al., 2011).
+- *TUSC5*: Bubnov et al. (2012) has demonstrated the down-regulation of TUSC5 induced by DNA methylation in breast cancer. In contrast to mutated genes, DNA methylation is reversible.
 * Take home message
 @@html:<br>@@
 #+ATTR_HTML: :align left :style background-color:lightgray;font-size:120% 
