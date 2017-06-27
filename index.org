@@ -383,7 +383,7 @@ n &\sim& \mathcal{N}(9,1)
 \end{eqnarray*}
 
 ** Procedure
-- **Step 1:** Simulate one single-subject datasets, which contains $p \%$ DEG. 
+- **Step 1:** Simulate one single-subject dataset, which contains $p \%$ DEG. 
 - **Step 2:** Conduct iDEG, edgeR[fn:1:], DESeq[fn:2:], and DEGseq[fn:3:].
 - **Step 3:** Compute an F1 score for each method,
 #+ATTR_HTML: :style font-size:90%
@@ -460,7 +460,7 @@ theme(legend.position = 'top',
 #+END_EXPORT
 @@html:<br>@@
 #+ATTR_html: :style font-size:80% :align left
-Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examines tens of thousands of genes in a high-throughput manner.
+Although the Recall/TPR and number of precisions of iDEG are lower than edgeR, iDEG has high precision and low FPR across all percentages of DEG. These operating characteristics of iDEG may be preferable in large-scale inference, like RNA-Seq analysis, where investigators examine tens of thousands of genes in a high-throughput manner.
 
 ** Sensitivity Analysis
 
@@ -541,7 +541,7 @@ We developed a new and effective method to identify differentially expressed gen
 <br>
 <ul>
 <li> Haiquan Li</li>
-<li> Haiquan LiJoanne Berghout</li>
+<li> Joanne Berghout</li>
 <li> Grant Schissler</li>
 <li> Yuan Shang</li>
 </ul>
